@@ -32,8 +32,14 @@ class Grading(models.Model):
     product = models.ForeignKey(Product)
     grading = models.BooleanField()
 
+    def __str__(self):
+        return "User " + self.user.username + " grade " + self.grading
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User)
     product = models.ForeignKey(Product)
     comment = models.TextField()
+
+    def __str__(self):
+        return self.comment

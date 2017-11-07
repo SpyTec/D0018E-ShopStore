@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users.apps.UsersConfig',
-    'orders.apps.OrdersConfig',
+    'user.apps.UserConfig',
+    'order.apps.OrderConfig',
     'shop.apps.ShopConfig',
 ]
 
@@ -57,7 +57,9 @@ ROOT_URLCONF = 'shopstore.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR + '/templates/'
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
