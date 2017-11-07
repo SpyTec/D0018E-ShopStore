@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users.apps.UsersConfig',
+    'orders.apps.OrdersConfig',
+    'shop.apps.ShopConfig',
 ]
 
 MIDDLEWARE = [
@@ -72,11 +75,14 @@ WSGI_APPLICATION = 'shopstore.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'guseri5db',
+        'USER': 'guseri-5',
+        'PASSWORD': 'bzz76Yg3HpNiXTtj',
+        'HOST': 'utbweb.its.ltu.se',
+        'PORT': '3306',
     }
 }
 
