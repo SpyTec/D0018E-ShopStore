@@ -15,7 +15,7 @@ class Order(models.Model):
     order_status = models.CharField(max_length=1, choices=STATUS)
 
 
-class OrderProducts(models.Model):
+class OrderProduct(models.Model):
     quantity = models.IntegerField()
     order = models.ForeignKey(Order)
     product = models.ForeignKey(Product)
