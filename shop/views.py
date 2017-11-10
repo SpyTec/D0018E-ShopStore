@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import generic
-from shop.models import Product
+from shop.models import Product, Category
 
 
 class IndexView(generic.ListView):
