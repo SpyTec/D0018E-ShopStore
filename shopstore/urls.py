@@ -16,12 +16,11 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-#from home import views as v
-from home import views
+from home import views as home
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^shop/', include('shop.urls')),
     url(r'^order/', include('order.urls')),
-    url(r'^', views.IndexView.as_view(), name='home'),
+    url(r'^', home.IndexView.as_view(), name='home'),
 ]

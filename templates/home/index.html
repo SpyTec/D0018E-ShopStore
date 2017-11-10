@@ -1,1 +1,17 @@
-Test
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col jumbotron">
+        <h1 class="display-3">Welcome to ShopStore!</h1>
+        <p class="lead">Centralized store for all things computer electronics related.</p>
+        <hr class="my-4">
+        <p>We offer free shipping.</p>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{% url "shop" %}" role="button">Start shopping</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

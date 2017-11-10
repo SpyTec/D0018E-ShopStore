@@ -1,0 +1,25 @@
+{% extends "shop/shop_base.html" %}
+
+{% block title %}Shop{% endblock %}
+
+{% block shop %}
+<h1>Items</h1>
+<div class="card-deck">
+{% for product in product_list %}
+    <div class="card" style="width: 20rem !important;">
+        <img class="card-img-top" src="#" alt="Card image cap">
+        <div class="card-body">
+            <h4 class="card-title">{{ product.name }}</h4>
+            <p class="card-text">{{ product.description }}</p>
+        </div>
+        <div class="card-footer text-right">
+            <div class="btn-group form-inline" role="group" aria-label="Basic example">
+                <a href="#" class="btn btn-primary">Buy</a>
+                <input type="number" class="form-control">
+            </div>
+
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}
