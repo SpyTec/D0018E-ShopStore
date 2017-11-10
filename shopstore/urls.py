@@ -22,5 +22,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^shop/', include('shop.urls')),
     url(r'^order/', include('order.urls')),
-    url(r'^', home.IndexView.as_view(), name='home'),
+    url(r'^$', home.IndexView.as_view(), name='home'),
 ]

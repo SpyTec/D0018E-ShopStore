@@ -1,0 +1,12 @@
+{% extends "shop/shop_base.html" %}
+
+{% block title %}Shop{% endblock %}
+
+{% block shop %}
+<h1>{{ product.name }}</h1>
+<p>{{ product.description }}</p>
+<p>
+    <a href="#" class="btn btn-primary">Buy</a>
+    <small>{{ product.price }} kr</small>
+</p>
+{% endblock %}

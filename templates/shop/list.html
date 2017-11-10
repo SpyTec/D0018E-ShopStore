@@ -7,17 +7,17 @@
 <div class="card-deck">
 {% for product in product_list %}
     <div class="card" style="width: 20rem !important;">
-        <img class="card-img-top" src="#" alt="Card image cap">
+{#        <img class="card-img-top" src="#" alt="Card image cap">#}
         <div class="card-body">
-            <h4 class="card-title">{{ product.name }}</h4>
+            <h4 class="card-title"><a href="{% url "shop_detail" product.pk %}">{{ product.name }}</a></h4>
             <p class="card-text">{{ product.description }}</p>
         </div>
         <div class="card-footer text-right">
+            <span class="small">{{ product.price }} kr</span>
             <div class="btn-group form-inline" role="group" aria-label="Basic example">
                 <a href="#" class="btn btn-primary">Buy</a>
                 <input type="number" class="form-control">
             </div>
-
         </div>
     </div>
 {% endfor %}
