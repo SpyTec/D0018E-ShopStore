@@ -14,17 +14,13 @@ class Product(models.Model):
     description = models.TextField()
     price = models.IntegerField()
     not_for_sale = models.BooleanField(default=0)
+    categories = models.ManyToManyField(Category)
 
     def __str__(self):
         return self.name
 
-
-class CategoryProduct(models.Model):
-    category = models.ForeignKey(Category)
-    product = models.ForeignKey(Product)
-
-    def __str__(self):
-        return "(" + self.category.name + ", " + self.product.name + ")"
+    class Meta:
+        ordering = ('name',)
 
 
 class Grading(models.Model):

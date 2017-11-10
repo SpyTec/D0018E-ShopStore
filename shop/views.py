@@ -3,11 +3,16 @@ from django.views import generic
 from shop.models import Product, Category
 
 
-class IndexView(generic.ListView):
+class Overview(generic.ListView):
     template_name = 'shop/list.html'
     model = Product
 
 
-class DetailView(generic.DetailView):
+class ProductView(generic.DetailView):
     template_name = 'shop/detail.html'
     model = Product
+
+
+class CategoryView(generic.DetailView):
+    template_name = 'shop/list_category.html'
+    model = Category

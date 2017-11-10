@@ -5,7 +5,7 @@
 {% block shop %}
 <h1>Items</h1>
 <div class="card-deck">
-{% for product in object_list %}
+{% for product in category.product_set.all %}
     <div class="card" style="width: 20rem !important;">
 {#        <img class="card-img-top" src="#" alt="Card image cap">#}
         <div class="card-body">
