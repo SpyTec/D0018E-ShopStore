@@ -9,38 +9,44 @@
 </head>
 
 <body>
-    <div>
-        <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">ShopStore</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
-                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    {% url 'home' as home_url %}
-                    <li class="nav-item{% if request.get_full_path == home_url %} active{% endif %}">
-                        <a class="nav-link" href="{% url "home" %}">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    {% url 'shop' pk as shop_url %}
-                    <li class="nav-item{% if request.get_full_path == shop_url %} active{% endif %}">
-                        <a class="nav-link" href="{% url "shop" %}">Shop</a>
-                    </li>
-                    <li class="nav-item dropdown{% if request.get_full_path == home_url %} active{% endif %}">
-                        <a class="nav-link dropdown-toggle{% if request.get_full_path == home_url %} active{% endif %}" href="#" id="navbarDropdownMenuLink"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Profile
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="#">Orders</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item btn-danger" href="#">Logout</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </div>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">ShopStore</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                {% url 'home' as home_url %}
+                <li class="nav-item{% if request.get_full_path == home_url %} active{% endif %}">
+                    <a class="nav-link" href="{% url "home" %}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                {% url 'shop' pk as shop_url %}
+                <li class="nav-item{% if request.get_full_path == shop_url %} active{% endif %}">
+                    <a class="nav-link" href="{% url "shop" %}">Shop</a>
+                </li>
+                <li class="nav-item dropdown{% if request.get_full_path == home_url %} active{% endif %}">
+                    <a class="nav-link dropdown-toggle{% if request.get_full_path == home_url %} active{% endif %}" href="#" id="navbarDropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Profile
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">Orders</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item btn-danger" href="#">Logout</a>
+                    </div>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                {% url 'shop' pk as shop_url %}
+                <li class="nav-item{% if request.get_full_path == shop_url %} active{% endif %}">
+                    <a class="nav-link" href="#">
+                        Cart <span class="badge badge-light">4</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
     <div id="container">
         {% block content %}{% endblock %}
