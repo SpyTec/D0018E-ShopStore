@@ -26,4 +26,4 @@ class OrderProduct(models.Model):
     product = models.ForeignKey(Product)
 
     def __str__(self):
-        return str(self.order.pk) + ", " + str(self.product.pk)
+        return "Order id: " + str(self.order.pk) + ", Product id: " + str(self.product.pk) + ", Quantity: " + str(self.quantity)
