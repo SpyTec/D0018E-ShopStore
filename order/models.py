@@ -7,17 +7,17 @@ from shop.models import Product
 class Order(models.Model):
 
     STATUS = (
-        (0, 'Verified'),
-        (1, 'Shipped'),
-        (2, 'Received'),
+        ('A', 'Verified'),
+        ('B', 'Shipped'),
+        ('C', 'Received'),
     )
 
     ordered = models.BooleanField()
-    order_status = models.CharField(max_length=1, choices=STATUS)
+    order_status = models.CharField(max_length=1, choices=STATUS, default='A')
     user = models.ForeignKey(User)
 
     def __str__(self):
-        return "Ordered: " + self.pk
+        return "Ordered: " + str(self.pk)
 
 
 class OrderProduct(models.Model):
