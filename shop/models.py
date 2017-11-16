@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from profile.models import User
 from django.db import models
 
 
@@ -12,8 +12,8 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    price = models.IntegerField()
-    inventory = models.IntegerField()
+    price = models.PositiveIntegerField()
+    inventory = models.PositiveIntegerField()
     not_for_sale = models.BooleanField(default=0)
     categories = models.ManyToManyField(Category)
 
