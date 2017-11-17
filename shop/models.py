@@ -40,3 +40,19 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.comment
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(User)
+    product = models.ManyToManyField(ProductSnapshot)
+
+    def __str__(self):
+        return "User: " + self.user.pk + ", has in basket: " + self.product
+
+
+class ProductSnapshot(models.Model):
+    product = models.ForeignKey(Product)
+    price = models.PositiveIntegerField(default=product.price)  # Check if this changes over time or stays persistant
+
+    def __str__(self):
+        return self.product.name + ", price: " + str(self.price)
