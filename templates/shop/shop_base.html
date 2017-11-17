@@ -4,11 +4,14 @@
 <div class="row col col-12">
     <div class="col col-12 col-lg-3">
         <h1>Categories</h1>
-        <ul>
+        <div class="list-group">
         {% for category in categories %}
-            <li><a href="{% url "shop_category" category.pk %}">{{ category }}</a></li>
+            {% url 'shop_category' pk=category.pk as shop_category %}
+            <a href="{% url "shop_category" category.pk %}" class="list-group-item list-group-item-action{% if shop_category == request.get_full_path %} active{% endif %}">
+                {{ category }}
+            </a>
         {% endfor %}
-        </ul>
+        </div>
     </div>
     <div class="col col-12 col-lg-9">
         {% block shop %}{% endblock %}
