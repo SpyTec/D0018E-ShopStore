@@ -46,6 +46,7 @@ class User(AbstractUser):
     last_name = models.CharField(_('last name'), max_length=30)
     personal_id = models.CharField(max_length=13,
                                    help_text=_('Personal ID has to follow style yyyyMMdd-xxxx.'),
+                                   unique=True,
                                    validators=[RegexValidator(regex='^\d{8}-\d{4}$',
                                                               message='Personal ID has to follow style yyyyMMdd-xxxx',
                                                               code='nomatch')])
@@ -53,8 +54,8 @@ class User(AbstractUser):
     city = models.CharField(max_length=255)
     zip_code = models.CharField(max_length=5,
                                 validators=[RegexValidator(regex='^\d{5}$',
-                                                              message='Post number has to be 5 long',
-                                                              code='nomatch')])
+                                                           message='Post number has to be 5 long',
+                                                           code='nomatch')])
     phone_number = models.CharField(max_length=14)
 
     USERNAME_FIELD = 'email'

@@ -12,12 +12,11 @@ class Order(models.Model):
         ('C', 'Received'),
     )
 
-    ordered = models.BooleanField()
     order_status = models.CharField(max_length=1, choices=STATUS, default='A')
     user = models.ForeignKey(User)
 
     def __str__(self):
-        return "Ordered: " + str(self.pk)
+        return "Order: " + str(self.pk)
 
 
 class OrderProduct(models.Model):
@@ -26,4 +25,4 @@ class OrderProduct(models.Model):
     product = models.ForeignKey(Product)
 
     def __str__(self):
-        return "Order id: " + str(self.order.pk) + ", Product id: " + str(self.product.pk) + ", Quantity: " + str(self.quantity)
+        return "Order id: {}, Product id: {}, Quantity: ".format(self.order.pk, self.product.pk, self.quantity)
