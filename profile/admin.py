@@ -20,11 +20,24 @@ class MyUserAdmin(UserAdmin):
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name')}),
+        (_('Personal info'), {
+            'fields': (
+                'first_name',
+                'last_name',
+                'personal_id',
+                'phone_number',
+            )
+        }),
+        (_('Address'), {
+            'fields': (
+                'address',
+                'city',
+                'zip_code',
+            )
+        }),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
-        #(None, {'fields': ('test',)}),
     )
 
     add_fieldsets = (
@@ -32,8 +45,21 @@ class MyUserAdmin(UserAdmin):
             'classes': ('wide',),
             'fields': ('email', 'password1', 'password2'),
         }),
-        #(None, {'fields': ('test',)}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name')}),
+        (_('Personal info'), {
+            'fields': (
+                'first_name',
+                'last_name',
+                'personal_id',
+                'phone_number',
+            )
+        }),
+        (_('Address'), {
+            'fields': (
+                'address',
+                'city',
+                'zip_code',
+            )
+        }),
     )
 
 

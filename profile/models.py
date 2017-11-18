@@ -1,5 +1,6 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -39,9 +40,22 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    #test = models.CharField(max_length=5)
     username = None
     email = models.EmailField(_('email address'), unique=True)
+    first_name = models.CharField(_('first name'), max_length=30)
+    last_name = models.CharField(_('last name'), max_length=30)
+    personal_id = models.CharField(max_length=13,
+                                   help_text=_('Personal ID has to follow style yyyyMMdd-xxxx.'),
+                                   validators=[RegexValidator(regex='^\d{8}-\d{4}$',
+                                                              message='Personal ID has to follow style yyyyMMdd-xxxx',
+                                                              code='nomatch')])
+    address = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    zip_code = models.CharField(max_length=5,
+                                validators=[RegexValidator(regex='^\d{5}$',
+                                                              message='Post number has to be 5 long',
+                                                              code='nomatch')])
+    phone_number = models.CharField(max_length=14)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
