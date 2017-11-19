@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Orders{% endblock %}
+{% block title %}Profile{% endblock %}
 
 {% block content %}
     <div class="justify-content-center row">
@@ -12,6 +12,9 @@
                 <p>City: {{ user.city }}</p>
                 <p>Zip: {{ user.zip_code }}</p>
                 <p>Phone number: {{ user.phone_number }}</p>
+            </div>
+            <div>
+                <a class="btn btn-primary" href="{% url 'edit_profile' %}">Edit</a>
             </div>
         </div>
         <div class="w-100 d-sm-block d-md-none"></div>

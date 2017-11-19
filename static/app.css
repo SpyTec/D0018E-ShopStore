@@ -1,4 +1,6 @@
-
+.navbar-nav .dropdown .dropdown-menu {
+    margin-top: -3px;
+}
 .navbar-nav .dropdown:hover .dropdown-menu {
     display: block;
 }
