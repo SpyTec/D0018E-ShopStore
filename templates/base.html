@@ -2,14 +2,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="style.css"/>
     <title>{% block title %}{% endblock %} - ShopStore</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
           integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static "app.css" %}">
 </head>
 
-<body>
+<body class="bg-light">
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <a class="navbar-brand" href="#">ShopStore</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
@@ -20,24 +19,31 @@
         <ul class="navbar-nav">
             {% url 'home' as home_url %}
             <li class="nav-item{% if request.get_full_path == home_url %} active{% endif %}">
-                <a class="nav-link" href="{% url "home" %}">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{% url "home" %}">Home</a>
             </li>
             {% url 'shop' as shop_url %}
             <li class="nav-item{% if shop_url in request.get_full_path %} active{% endif %}">
                 <a class="nav-link" href="{% url "shop" %}">Shop</a>
             </li>
-            <li class="nav-item dropdown{% if request.get_full_path == home_url %} active{% endif %}">
-                <a class="nav-link dropdown-toggle{% if request.get_full_path == home_url %} active{% endif %}" href="#"
+            {% url 'profile' as profile_url %}
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown{% if profile_url in request.get_full_path %} active{% endif %}">
+                <a class="nav-link dropdown-toggle{% if profile_url in request.get_full_path %} active{% endif %}" href="{% url "profile" %}"
                    id="navbarDropdownMenuLink"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   aria-haspopup="true" aria-expanded="false">
                     Profile
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="#">Orders</a>
+                    <a class="dropdown-item" href="{% url "profile_orders" %}">Orders</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item btn-danger" href="#">Logout</a>
+                    <a class="dropdown-item btn-danger" href="{% url "logout" %}">Logout</a>
                 </div>
             </li>
+            {% else %}
+            <li class="nav-item{% if profile_url in request.get_full_path %} active{% endif %}">
+                <a class="nav-link" href="{% url "login" %}">Login</a>
+            </li>
+            {% endif %}
         </ul>
         <ul class="navbar-nav ml-auto">
             {% url 'shop' pk as shop_url %}
@@ -50,7 +56,7 @@
     </div>
 </nav>
 
-<div id="container">
+<div id="container" class="mt-3">
     {% block content %}{% endblock %}
 </div>
 </body>

@@ -23,6 +23,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^shop/', include('shop.urls')),
     url(r'^order/', include('order.urls')),
-    url(r'^profile/', lambda request: HttpResponse("Profile page. /orders, /edit", content_type="text/plain")),
+    url(r'^profile/', include('profile.urls')),  # Order and edit too
     url(r'^$', home.IndexView.as_view(), name='home'),
 ]

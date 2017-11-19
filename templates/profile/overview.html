@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Orders{% endblock %}
+
+{% block content %}
+    <div class="justify-content-center row">
+        <div class="col col-sm-8 col-md-4 col-lg-3 col-xl-2">
+            <h1>Hello {{ user.get_short_name }}</h1>
+            <div>
+                <p>Email: {{ user.email }}</p>
+                <p>Address: {{ user.address }}</p>
+                <p>City: {{ user.city }}</p>
+                <p>Zip: {{ user.zip_code }}</p>
+                <p>Phone number: {{ user.phone_number }}</p>
+            </div>
+        </div>
+        <div class="w-100 d-sm-block d-md-none"></div>
+        <div class="col col-sm-8 col-md-8 col-lg-8 col-xl-7">
+            <h1>Orders</h1>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Date ordered</th>
+                        <th scope="col">Order status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in user.order_set.all %}
+                        <tr>
+                            <th scope="row"><a href="#">{{ order.id }}</a></th>
+                            <td>{{ order.ordered }}</td>
+                            <td>{{ order.get_order_status_display }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <th colspan="3" class="text-center"><a href="{% url "profile_orders" %}">More</a></th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
