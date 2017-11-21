@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.views import generic
 from shop.models import Product, Category, ProductSnapshot, Cart
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 
 
@@ -26,7 +27,23 @@ class CategoryOverview(generic.ListView):
 
 @login_required()
 def add_to_cart(request, pk):
+    # Get current user and product
+    current_user = request.user
     product = Product.objects.get(pk=pk)
-    productSnapshot = ProductSnapshot(product=product, priceSnapshot=product.price).save()
-    #Cart(user=request.user, product=productSnapshot).save()
+
+    # Look if user has existing cart
+    cart_count = Cart.objects.filter(user=current_user).count()
+    if cart_count is 0:
+        # Create new cart
+        cart = Cart(user=current_user)
+    else:
+        # Use existing cart for user
+        cart = Cart.objects.get(user=current_user)
+
+    # Create snapshot and add to basket
+    snapshot = ProductSnapshot(product=product, priceSnapshot=product.price)
+    cart.save()
+    snapshot.save()
+    cart.product.add(snapshot)
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
