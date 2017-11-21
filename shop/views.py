@@ -36,14 +36,13 @@ def add_to_cart(request, pk):
     if cart_count is 0:
         # Create new cart
         cart = Cart(user=current_user)
+        cart.save()
     else:
         # Use existing cart for user
         cart = Cart.objects.get(user=current_user)
 
-    # Create snapshot and add to basket
-    snapshot = ProductSnapshot(product=product, priceSnapshot=product.price)
-    cart.save()
+    # Create snapshot and add to user basket
+    snapshot = ProductSnapshot(product=product, priceSnapshot=product.price, user_cart=cart)
     snapshot.save()
-    cart.product.add(snapshot)
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

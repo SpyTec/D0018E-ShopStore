@@ -45,17 +45,17 @@ class Comment(models.Model):
         return self.comment
 
 
+class Cart(models.Model):
+    user = models.ForeignKey(User)
+
+    def __str__(self):
+        return "User: " + str(self.user.pk) + " has a basket created."
+
+
 class ProductSnapshot(models.Model):
     product = models.ForeignKey(Product)
+    user_cart = models.ForeignKey(Cart)
     priceSnapshot = models.PositiveIntegerField(default=None)
 
     def __str__(self):
         return self.product.name + ", price: " + str(self.priceSnapshot)
-
-
-class Cart(models.Model):
-    user = models.ForeignKey(User)
-    product = models.ManyToManyField(ProductSnapshot)
-
-    def __str__(self):
-        return "User: " + str(self.user.pk) + " has a basket created."
