@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from profile.models import User
 from django.db import models
 
@@ -7,17 +9,17 @@ from shop.models import Product
 class Order(models.Model):
 
     STATUS = (
-        ('A', 'Verified'),
-        ('B', 'Shipped'),
-        ('C', 'Received'),
+        ("0", 'Verified'),
+        ("1", 'Shipped'),
+        ("2", 'Received'),
     )
 
-    ordered = models.BooleanField()
+    ordered = models.DateTimeField(default=timezone.now)
     order_status = models.CharField(max_length=1, choices=STATUS, default='A')
     user = models.ForeignKey(User)
 
     def __str__(self):
-        return "Ordered: " + str(self.pk)
+        return "Order: " + str(self.pk)
 
 
 class OrderProduct(models.Model):
@@ -26,4 +28,4 @@ class OrderProduct(models.Model):
     product = models.ForeignKey(Product)
 
     def __str__(self):
-        return "Order id: " + str(self.order.pk) + ", Product id: " + str(self.product.pk) + ", Quantity: " + str(self.quantity)
+        return "Order id: {}, Product id: {}, Quantity: {}".format(self.order.pk, self.product.pk, self.quantity)
