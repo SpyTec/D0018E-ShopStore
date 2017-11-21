@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.views import generic
 from shop.models import Product, Category, ProductSnapshot, Cart
+from django.contrib.auth.decorators import login_required
 
 
 class Overview(generic.ListView):
@@ -23,6 +24,7 @@ class CategoryOverview(generic.ListView):
     model = Category
 
 
+@login_required()
 def add_to_cart(request, pk):
     product = Product.objects.get(pk=pk)
     ProductSnapshot(product=product, priceSnapshot=product.price).save()
