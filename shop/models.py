@@ -34,7 +34,7 @@ class Grading(models.Model):
 
 
 class Comment(models.Model):
-    # user = models.ForeignKey(User)
+    user = models.ForeignKey(User)
     product = models.ForeignKey(Product)
     comment = models.TextField()
 
