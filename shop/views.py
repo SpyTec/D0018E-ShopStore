@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
 from django.views import generic
-from shop.models import Product, Category
+from shop.models import Product, Category, ProductSnapshot, Cart
 
 
 class Overview(generic.ListView):
@@ -21,3 +21,9 @@ class CategoryView(generic.DetailView):
 class CategoryOverview(generic.ListView):
     template_name = 'shop/shop_base.html'
     model = Category
+
+
+def add_to_cart(request, pk):
+    product = Product.objects.get(pk=pk)
+    ProductSnapshot(product=product, priceSnapshot=product.price).save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
