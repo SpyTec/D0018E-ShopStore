@@ -44,10 +44,10 @@ class Comment(models.Model):
 
 class ProductSnapshot(models.Model):
     product = models.ForeignKey(Product)
-    price = models.PositiveIntegerField()
+    priceSnapshot = models.PositiveIntegerField(default=None)
 
     def __str__(self):
-        return self.product.name + ", price: " + str(self.price)
+        return self.product.name + ", price: " + str(self.priceSnapshot)
 
 
 class Cart(models.Model):
