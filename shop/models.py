@@ -34,7 +34,7 @@ class Grading(models.Model):
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(User)
+    # user = models.ForeignKey(User)
     product = models.ForeignKey(Product)
     comment = models.TextField()
 
@@ -44,7 +44,7 @@ class Comment(models.Model):
 
 class ProductSnapshot(models.Model):
     product = models.ForeignKey(Product)
-    #price = models.PositiveIntegerField(default=product.price)  # Check if this changes over time or stays persistant
+    price = models.PositiveIntegerField()
 
     def __str__(self):
         return self.product.name + ", price: " + str(self.price)
