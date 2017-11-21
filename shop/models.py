@@ -58,4 +58,4 @@ class Cart(models.Model):
     product = models.ManyToManyField(ProductSnapshot)
 
     def __str__(self):
-        return "User: " + self.user.pk + ", has in basket: " + self.product
+        return "User: " + str(self.user.pk) + " has a basket created."

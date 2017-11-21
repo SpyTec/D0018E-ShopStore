@@ -27,5 +27,6 @@ class CategoryOverview(generic.ListView):
 @login_required()
 def add_to_cart(request, pk):
     product = Product.objects.get(pk=pk)
-    ProductSnapshot(product=product, priceSnapshot=product.price).save()
+    productSnapshot = ProductSnapshot(product=product, priceSnapshot=product.price).save()
+    #Cart(user=request.user, product=productSnapshot).save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
