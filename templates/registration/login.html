@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <div class="justify-content-md-center row">
+        <div class="border rounded pb-2 bg-white col col-md-6 col-lg-4 col-xl-3">
+            <h1>Login</h1>
+            {% if form.errors %}
+                <div class="alert alert-danger mt-3" role="alert">Your username and password didn't match. Please try
+                    again.
+                </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="col-form-label"
+                           for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                    <input class="form-control" id="{{ form.username.id_for_label }}" maxlength="254"
+                           name="{{ form.username.html_name }}" type="text" placeholder="{{ form.username.label }}" value="{{ form.username.value|default_if_none:"" }}"/>
+                    {% if form.username.help_text %}
+                        <small class="form-text">{{ form.username.help_text|safe }}</small>
+                    {% endif %}
+                    {{ form.username.errors }}
+                </div>
+                <div class="form-group">
+                    <label class="col-form-label"
+                           for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+                    <input class="form-control" id="{{ form.password.id_for_label }}" maxlength="254"
+                           name="{{ form.password.html_name }}" type="password"
+                           placeholder="{{ form.password.label }}"/>
+                    {{ form.password.errors }}
+                </div>
+                <input class="btn btn-primary" type="submit" value="Login"/>
+                <input type="hidden" name="next" value="{{ next }}"/>
+            </form>
+        </div>
+    </div>
+{% endblock %}
