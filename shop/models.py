@@ -49,7 +49,7 @@ class Cart(models.Model):
     user = models.ForeignKey(User)
 
     def __str__(self):
-        return "User: " + str(self.user.pk) + " has a basket created."
+        return "User " + str(self.user.pk)
 
 
 class ProductSnapshot(models.Model):
