@@ -17,7 +17,7 @@
                 <div class="row">
                     <div class="col col-4">{{ product.price }}&nbsp;kr</div>
                     <div class="btn-group col col-8 row" role="group" aria-label="Buy amount">
-                        <a href="#" class="btn btn-primary col col-4">Buy</a>
+                        <a href="{% url 'shop_add_to_cart' product.pk %}" class="btn btn-primary col col-4">Buy</a>
                         <input type="number" class="form-control col col-8">
                     </div>
                 </div>
