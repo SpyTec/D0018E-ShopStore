@@ -33,7 +33,7 @@ class Grading(models.Model):
     grading = models.BooleanField()
 
     def __str__(self):
-        return "User " + self.user.username + " grade " + self.grading
+        return "User {} grade {}".format(self.user.username, self.grading)
 
 
 class Comment(models.Model):
@@ -49,13 +49,13 @@ class Cart(models.Model):
     user = models.ForeignKey(User)
 
     def __str__(self):
-        return "User " + str(self.user.pk)
+        return "User {}".format(self.user.pk)
 
 
 class ProductSnapshot(models.Model):
-    product = models.ForeignKey(Product)
-    user_cart = models.ForeignKey(Cart)
-    priceSnapshot = models.PositiveIntegerField(default=None)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user_cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    price_snapshot = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return self.product.name + ", price: " + str(self.priceSnapshot)
+        return "{}, price: {}".format(self.product.name, self.price_snapshot)
