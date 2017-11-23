@@ -3,10 +3,9 @@
 {% block title %}Shop{% endblock %}
 
 {% block shop %}
-<h1>{{ product.name }}</h1>
-<p>{{ product.description }}</p>
-<p>
-    <a href="{% url 'shop_add_to_cart' product.pk %}" class="btn btn-primary">Buy</a>
-    <small>{{ product.price }} kr</small>
-</p>
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.description }}</p>
+    <div class="">
+        {% include "shop/buy_button.html" %}
+    </div>
 {% endblock %}

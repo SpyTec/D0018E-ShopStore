@@ -1,3 +1,6 @@
+from django.core.validators import MinValueValidator
+from django.db.models import Sum, F
+
 from profile.models import User
 from django.db import models
 
@@ -33,7 +36,7 @@ class Grading(models.Model):
     grading = models.BooleanField()
 
     def __str__(self):
-        return "User " + self.user.username + " grade " + self.grading
+        return "User {} grade {}".format(self.user.username, self.grading)
 
 
 class Comment(models.Model):
@@ -46,16 +49,35 @@ class Comment(models.Model):
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User)
+    user = models.OneToOneField(User, primary_key=True)
+
+    @property
+    def items(self):
+        return self.cartitem_set.aggregate(cart_cost=Sum(
+            F('price_snapshot') *
+            F('quantity'),
+            output_field=models.PositiveIntegerField()
+        ))
 
     def __str__(self):
-        return "User " + str(self.user.pk)
+        return "Cart for {}".format(self.user.pk)
 
 
-class ProductSnapshot(models.Model):
-    product = models.ForeignKey(Product)
-    user_cart = models.ForeignKey(Cart)
-    priceSnapshot = models.PositiveIntegerField(default=None)
+class CartItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user_cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    price_snapshot = models.PositiveIntegerField(default=0)
+    quantity = models.PositiveIntegerField(default=1,
+                                           validators=[
+                                               MinValueValidator(1)
+                                           ])
+
+    class Meta:
+        unique_together = ('product', 'user_cart')
+
+    @property
+    def total_cost(self):
+        return self.quantity * self.price_snapshot
 
     def __str__(self):
-        return self.product.name + ", price: " + str(self.priceSnapshot)
+        return "{}, price: {}".format(self.product.name, self.price_snapshot)
