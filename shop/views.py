@@ -1,6 +1,7 @@
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
-from shop.models import Product, Category, ProductSnapshot, Cart
+from shop.models import Product, Category, CartItem, Cart
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 
@@ -42,7 +43,14 @@ def add_to_cart(request, pk):
         cart = Cart.objects.get(user=current_user)
 
     # Create snapshot and add to user basket
-    snapshot = ProductSnapshot(product=product, priceSnapshot=product.price, user_cart=cart)
-    snapshot.save()
+    article, created = CartItem.objects.get_or_create(product=product, user_cart=cart)
+    article.price_snapshot = product.price
+    if request.POST.get("quantity").isdigit():
+        article.quantity = request.POST.get("quantity", "1")
+    else:
+        article.quantity = 1
+    article.save()
+
+    messages.info(request, "{} has been added to cart.".format(product.name))
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 
 from profile.models import User
-from .models import Product, Cart, ProductSnapshot
+from .models import Product, Cart, CartItem
 
 
 class CartTests(TestCase):
@@ -26,7 +26,7 @@ class CartTests(TestCase):
 
     def test_product_snapshot_defaults_to_zero(self):
         product = Product.objects.create(name='i7', description="Bla bla bla", price=200, inventory=3)
-        ps = ProductSnapshot.objects.create(
+        ps = CartItem.objects.create(
             product=product,
             user_cart=self.cart,
         )
@@ -34,18 +34,18 @@ class CartTests(TestCase):
 
     def test_cart_cascade_deletes(self):
         product = Product.objects.create(name='i7', description="Bla bla bla", price=200, inventory=3)
-        ps = ProductSnapshot.objects.create(
+        ps = CartItem.objects.create(
             product=product,
             user_cart=Cart.objects.get(pk=self.cart.pk),
         )
 
         self.assertEquals(Cart.objects.filter(pk=self.cart.pk).count(), 1)
-        self.assertEquals(ProductSnapshot.objects.filter(pk=ps.pk).count(), 1)
+        self.assertEquals(CartItem.objects.filter(pk=ps.pk).count(), 1)
 
         Cart.objects.get(pk=self.cart.pk).delete()
 
         self.assertEquals(Cart.objects.filter(pk=self.cart.pk).count(), 0)
-        self.assertEquals(ProductSnapshot.objects.filter(pk=ps.pk).count(), 0)
+        self.assertEquals(CartItem.objects.filter(pk=ps.pk).count(), 0)
 
 
 class RootTests(TestCase):

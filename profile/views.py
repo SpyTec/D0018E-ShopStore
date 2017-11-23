@@ -58,3 +58,10 @@ class PasswordChangeWithMessageView(PasswordChangeView):
     def form_valid(self, form):
         messages.success(self.request, "Your password has been changed.")
         return super(PasswordChangeWithMessageView, self).form_valid(form)
+
+
+class UserCart(LoginRequiredMixin, DetailView):
+    template_name = 'profile/cart.html'
+
+    def get_object(self, queryset=None):
+        return self.request.user.cart

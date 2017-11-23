@@ -33,6 +33,7 @@
                     {{ form.password.errors }}
                 </div>
                 <input class="btn btn-primary" type="submit" value="Login"/>
+                <a href="{% url "registration_register" %}" class="btn btn-secondary">Register</a>
                 <input type="hidden" name="next" value="{{ next }}"/>
             </form>
         </div>
