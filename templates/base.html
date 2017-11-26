@@ -27,39 +27,42 @@
             </li>
             {% url 'profile' as profile_url %}
             {% if user.is_authenticated %}
-            <li class="nav-item dropdown{% if profile_url in request.get_full_path %} active{% endif %}">
-                <a class="nav-link dropdown-toggle{% if profile_url in request.get_full_path %} active{% endif %}" href="{% url "profile" %}"
-                   id="navbarDropdownMenuLink"
-                   aria-haspopup="true" aria-expanded="false">
-                    Profile
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="{% url "profile_orders" %}">Orders</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item btn-danger" href="{% url "logout" %}">Logout</a>
-                </div>
-            </li>
+                <li class="nav-item dropdown{% if profile_url in request.get_full_path %} active{% endif %}">
+                    <a class="nav-link dropdown-toggle{% if profile_url in request.get_full_path %} active{% endif %}"
+                       href="{% url "profile" %}"
+                       id="navbarDropdownMenuLink"
+                       aria-haspopup="true" aria-expanded="false">
+                        Profile
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{% url "profile_orders" %}">Orders</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item btn-danger" href="{% url "logout" %}">Logout</a>
+                    </div>
+                </li>
             {% else %}
-            <li class="nav-item{% if profile_url in request.get_full_path %} active{% endif %}">
-                <a class="nav-link" href="{% url "login" %}">Login</a>
-            </li>
+                <li class="nav-item{% if profile_url in request.get_full_path %} active{% endif %}">
+                    <a class="nav-link" href="{% url "login" %}">Login</a>
+                </li>
             {% endif %}
         </ul>
-        <ul class="navbar-nav ml-auto">
-            {% url 'profile_cart' pk as profile_cart_url %}
-            <li class="nav-item{% if profile_cart_url in request.get_full_path %} active{% endif %}">
-                <a class="nav-link" href="{% url "profile_cart" %}">
-                    Cart <span class="badge badge-light">{{ cart_item_count|default_if_none:"0" }}</span>
-                </a>
-            </li>
-        </ul>
+        {% if  user.is_authenticated %}
+            <ul class="navbar-nav ml-auto">
+                {% url 'profile_cart' pk as profile_cart_url %}
+                <li class="nav-item{% if profile_cart_url in request.get_full_path %} active{% endif %}">
+                    <a class="nav-link" href="{% url "profile_cart" %}">
+                        Cart <span class="badge badge-light">{{ cart_item_count|default_if_none:"0" }}</span>
+                    </a>
+                </li>
+            </ul>
+        {% endif %}
     </div>
 </nav>
 
 <div id="container" class="mt-3 container-fluid">
     {% if messages %}
         {% for message in messages %}
-        <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
         {% endfor %}
     {% endif %}
     {% block content %}{% endblock %}

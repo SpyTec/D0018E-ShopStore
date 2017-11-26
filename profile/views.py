@@ -67,6 +67,13 @@ class PasswordChangeWithMessageView(PasswordChangeView):
 
 @login_required()
 def user_cart(request):
+    # If user doesn't have a cart in DB, display empty
+    if not hasattr(request.user, 'cart'):
+        return render(request, 'profile/cart.html', {
+            'cart': None,
+            'formset': None
+        })
+
     cart = request.user.cart
 
     cartitem_form_set = inlineformset_factory(Cart, CartItem, fields=('quantity',), extra=0)
@@ -74,10 +81,11 @@ def user_cart(request):
     if request.method == "POST":
         formset = cartitem_form_set(request.POST, request.FILES, instance=cart)
         if formset.is_valid():
-            # do something with the cleaned_data on the formsets.
             messages.info(request, message='Cart updated')
             formset.save()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        else:
+            messages.warning(request, message='Form is invalid')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     else:
         formset = cartitem_form_set(instance=cart)
     return render(request, 'profile/cart.html', {

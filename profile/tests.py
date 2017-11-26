@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from order.models import Order
 from profile.models import User
-from shop.models import Product
+from shop.models import Product, Cart
 
 
 class Customer(TestCase):
@@ -141,3 +141,219 @@ class OrderHandlers(TestCase):
         response = self.client.get('/admin/shop/product/{}/change/'.format(self.product.id), follow=True)
 
         self.assertEquals(response.status_code, 403)
+
+
+class CartFunctionality(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(
+            email="text@example.com",
+            first_name="John",
+            last_name="Doe",
+            personal_id="20171118-1234",
+            address="Gatan 2",
+            city="Luleå",
+            zip_code="97434",
+            phone_number="0731234567",
+            is_staff=True,
+        )
+        self.password = 'Abcde123456'
+        self.user.set_password(self.password)
+        self.user.save()
+
+        self.product1 = Product.objects.create(
+            name="Abc2",
+            description="123",
+            price=10,
+            inventory=10,
+            not_for_sale=0,
+        )
+
+        self.product2 = Product.objects.create(
+            name="Abc1",
+            description="456",
+            price=3,
+            inventory=5,
+            not_for_sale=0,
+        )
+
+        self.cart = Cart.objects.create(
+            user=self.user
+        )
+
+    def test_cart_is_empty(self):
+        data = {
+            'username': self.user.email,
+            'password': self.password,
+        }
+        self.client.login(**data)
+
+        response = self.client.get(reverse('profile_cart'))
+
+        self.assertContains(response, "Cart is empty")
+
+    def test_can_add_product_to_cart(self):
+        data = {
+            'username': self.user.email,
+            'password': self.password,
+        }
+        self.client.login(**data)
+
+        quantity = 5
+        response = self.client.post(reverse('shop_add_to_cart', args=(self.product1.pk,)), {
+            'quantity': quantity
+        }, follow=True)
+
+        self.assertContains(response, "{} has been added to cart".format(self.product1.name))
+
+        cart_response = self.client.get(reverse('profile_cart'))
+
+        self.assertContains(cart_response, self.product1.name)
+        self.assertContains(cart_response, quantity * self.product1.price)
+
+    def test_cart_has_update_and_buy_buttons(self):
+        self.client.force_login(self.user)
+
+        self.client.post(reverse('shop_add_to_cart', args=(self.product1.pk,)), {
+            'quantity': 5
+        })
+
+        cart_response = self.client.get(reverse('profile_cart'))
+
+        self.assertContains(cart_response, "Update cart")
+        self.assertContains(cart_response, "Buy")
+
+    def test_cart_total_cost_is_correct(self):
+        self.client.force_login(self.user)
+
+        quantity1 = 5
+        self.client.post(reverse('shop_add_to_cart', args=(self.product1.pk,)), {
+            'quantity': quantity1
+        })
+
+        quantity2 = 3
+        self.client.post(reverse('shop_add_to_cart', args=(self.product2.pk,)), {
+            'quantity': quantity2
+        })
+
+        cart_response = self.client.get(reverse('profile_cart'))
+
+        self.assertContains(cart_response,
+                            "{}&nbsp;kr".format(quantity1 * self.product1.price + quantity2 * self.product2.price))
+
+    def test_cart_number_shows_correct_number(self):
+        data = {
+            'username': self.user.email,
+            'password': self.password,
+        }
+        self.client.login(**data)
+
+        quantity1 = 6
+        self.client.post(reverse('shop_add_to_cart', args=(self.product1.pk,)), {
+            'quantity': quantity1 - 1
+        }, follow=True)
+        self.client.post(reverse('shop_add_to_cart', args=(self.product1.pk,)), {
+            'quantity': quantity1
+        }, follow=True)
+
+        quantity2 = 5
+        response = self.client.post(reverse('shop_add_to_cart', args=(self.product2.pk,)), {
+            'quantity': quantity2
+        }, follow=True)
+
+        self.assertContains(response, 'Cart <span class="badge badge-light">{}</span>'.format(quantity1 + quantity2))
+
+    def test_can_increase_product_quantity_in_cart(self):
+        self.client.force_login(self.user)
+
+        quantity = 5
+        self.client.post(reverse('shop_add_to_cart', args=(self.product1.pk,)), {
+            'quantity': quantity
+        }, follow=True)
+
+        cart_response = self.client.get(reverse('profile_cart'))
+        self.assertContains(cart_response, 'value="{}"'.format(quantity))
+        quantity = quantity + 1
+        post_parameters = {'cartitem_set-0-id': self.product1.pk,
+                           'cartitem_set-0-quantity': quantity,
+                           'cartitem_set-TOTAL_FORMS': 1,
+                           'cartitem_set-INITIAL_FORMS': 1,
+                           }
+
+        cart_response = self.client.post(reverse('profile_cart'),
+                                         data=post_parameters,
+                                         follow=True,
+                                         HTTP_REFERER=reverse('profile_cart'))
+        self.assertContains(cart_response, 'Cart updated')
+        self.assertContains(cart_response, 'value="{}"'.format(quantity))
+
+    def test_can_decrease_product_quantity_in_cart(self):
+        self.client.force_login(self.user)
+
+        quantity = 6
+        self.client.post(reverse('shop_add_to_cart', args=(self.product1.pk,)), {
+            'quantity': quantity
+        }, follow=True)
+
+        cart_response = self.client.get(reverse('profile_cart'))
+        self.assertContains(cart_response, 'value="{}"'.format(quantity))
+        quantity = quantity - 1
+        post_parameters = {'cartitem_set-0-id': self.product1.pk,
+                           'cartitem_set-0-quantity': quantity,
+                           'cartitem_set-TOTAL_FORMS': 1,
+                           'cartitem_set-INITIAL_FORMS': 1,
+                           }
+
+        cart_response = self.client.post(reverse('profile_cart'),
+                                         data=post_parameters,
+                                         follow=True,
+                                         HTTP_REFERER=reverse('profile_cart'))
+        self.assertContains(cart_response, 'Cart updated')
+        self.assertContains(cart_response, 'value="{}"'.format(quantity))
+
+    def test_cart_product_can_not_have_negative_quantity(self):
+        self.client.force_login(self.user)
+
+        quantity = 5
+        self.client.post(reverse('shop_add_to_cart', args=(self.product1.pk,)), {
+            'quantity': quantity
+        }, follow=True)
+
+        quantity2 = -2
+        post_parameters = {'cartitem_set-0-id': self.product1.pk,
+                           'cartitem_set-0-quantity': quantity2,
+                           'cartitem_set-TOTAL_FORMS': 1,
+                           'cartitem_set-INITIAL_FORMS': 1,
+                           }
+
+        cart_response = self.client.post(reverse('profile_cart'),
+                                         data=post_parameters,
+                                         follow=True,
+                                         HTTP_REFERER=reverse('profile_cart'))
+        self.assertContains(cart_response, 'Form is invalid')
+        self.assertContains(cart_response, 'value="{}"'.format(quantity))
+        self.assertNotContains(cart_response, 'value="{}"'.format(quantity2))
+
+    def test_cart_does_not_show_when_logged_out(self):
+        response = self.client.get(reverse('home'))
+        self.assertNotContains(response, 'Cart <span class="badge badge-light">')
+
+    def test_can_visit_cart_without_products_added(self):
+        user = User.objects.create(
+            email="text@example.cam",
+            first_name="John",
+            last_name="Doe",
+            personal_id="20171118-1235",
+            address="Gatan 2",
+            city="Luleå",
+            zip_code="97434",
+            phone_number="0731234567",
+            is_staff=True,
+        )
+        password = 'Abcde123456'
+        user.set_password(password)
+        user.save()
+
+        self.client.force_login(user)
+
+        cart_response = self.client.get(reverse('profile_cart'))
+        self.assertEquals(cart_response.status_code, 200)

@@ -8,7 +8,7 @@ def category(request):
 
 
 def cart(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and hasattr(request.user, 'cart'):
         cart_items = request.user.cart.cartitem_set
 
         from django.db.models import Sum
@@ -16,3 +16,5 @@ def cart(request):
             'cart_items': cart_items.all(),
             'cart_item_count': cart_items.aggregate(Sum('quantity')).get('quantity__sum', 0.00),
         }
+    # Return empty for return-type consistency and avoid exceptions
+    return {}
