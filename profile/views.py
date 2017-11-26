@@ -67,6 +67,13 @@ class PasswordChangeWithMessageView(PasswordChangeView):
 
 @login_required()
 def user_cart(request):
+    # If user doesn't have a cart in DB, display empty
+    if not hasattr(request.user, 'cart'):
+        return render(request, 'profile/cart.html', {
+            'cart': None,
+            'formset': None
+        })
+
     cart = request.user.cart
 
     cartitem_form_set = inlineformset_factory(Cart, CartItem, fields=('quantity',), extra=0)
