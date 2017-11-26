@@ -310,6 +310,29 @@ class CartFunctionality(TestCase):
         self.assertContains(cart_response, 'Cart updated')
         self.assertContains(cart_response, 'value="{}"'.format(quantity))
 
+    def test_cart_product_can_not_have_negative_quantity(self):
+        self.client.force_login(self.user)
+
+        quantity = 5
+        self.client.post(reverse('shop_add_to_cart', args=(self.product1.pk,)), {
+            'quantity': quantity
+        }, follow=True)
+
+        quantity2 = -2
+        post_parameters = {'cartitem_set-0-id': self.product1.pk,
+                           'cartitem_set-0-quantity': quantity2,
+                           'cartitem_set-TOTAL_FORMS': 1,
+                           'cartitem_set-INITIAL_FORMS': 1,
+                           }
+
+        cart_response = self.client.post(reverse('profile_cart'),
+                                         data=post_parameters,
+                                         follow=True,
+                                         HTTP_REFERER=reverse('profile_cart'))
+        self.assertContains(cart_response, 'Form is invalid')
+        self.assertContains(cart_response, 'value="{}"'.format(quantity))
+        self.assertNotContains(cart_response, 'value="{}"'.format(quantity2))
+
     def test_cart_does_not_show_when_logged_out(self):
         response = self.client.get(reverse('home'))
         self.assertNotContains(response, 'Cart <span class="badge badge-light">')

@@ -81,10 +81,11 @@ def user_cart(request):
     if request.method == "POST":
         formset = cartitem_form_set(request.POST, request.FILES, instance=cart)
         if formset.is_valid():
-            # do something with the cleaned_data on the formsets.
             messages.info(request, message='Cart updated')
             formset.save()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        else:
+            messages.warning(request, message='Form is invalid')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     else:
         formset = cartitem_form_set(instance=cart)
     return render(request, 'profile/cart.html', {
