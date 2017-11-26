@@ -1,11 +1,16 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView
+from django.forms import inlineformset_factory
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, FormView, UpdateView
 
 from profile import forms
+from shop.models import CartItem, Cart
 
 
 class Overview(LoginRequiredMixin, DetailView):
@@ -60,8 +65,22 @@ class PasswordChangeWithMessageView(PasswordChangeView):
         return super(PasswordChangeWithMessageView, self).form_valid(form)
 
 
-class UserCart(LoginRequiredMixin, DetailView):
-    template_name = 'profile/cart.html'
+@login_required()
+def user_cart(request):
+    cart = request.user.cart
 
-    def get_object(self, queryset=None):
-        return self.request.user.cart
+    cartitem_form_set = inlineformset_factory(Cart, CartItem, fields=('quantity',), extra=0)
+
+    if request.method == "POST":
+        formset = cartitem_form_set(request.POST, request.FILES, instance=cart)
+        if formset.is_valid():
+            # do something with the cleaned_data on the formsets.
+            messages.info(request, message='Cart updated')
+            formset.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    else:
+        formset = cartitem_form_set(instance=cart)
+    return render(request, 'profile/cart.html', {
+        'cart': cart,
+        'formset': formset
+    })

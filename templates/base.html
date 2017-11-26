@@ -49,7 +49,7 @@
             {% url 'profile_cart' pk as profile_cart_url %}
             <li class="nav-item{% if profile_cart_url in request.get_full_path %} active{% endif %}">
                 <a class="nav-link" href="{% url "profile_cart" %}">
-                    Cart <span class="badge badge-light">{{ cart_item_count }}</span>
+                    Cart <span class="badge badge-light">{{ cart_item_count|default_if_none:"0" }}</span>
                 </a>
             </li>
         </ul>
@@ -64,7 +64,6 @@
     {% endif %}
     {% block content %}{% endblock %}
 </div>
-</body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
@@ -74,4 +73,5 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
         integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
         crossorigin="anonymous"></script>
+</body>
 </html>
