@@ -16,5 +16,7 @@ urlpatterns = [
 
     url(r'^register/$', views.RegistrationView.as_view(), name='registration_register'),
     url(r'^edit/$', views.ProfileEditView.as_view(), name='edit_profile'),
-    url(r'^cart/$', views.UserCart.as_view(), name='profile_cart'),
+    # url(r'^cart/$', views.UserCart.as_view(), name='profile_cart'),
+    url(r'^cart/$', views.user_cart, name='profile_cart'),
+    # url(r'^cart/update/$', views.UpdateUserCart.as_view(), name='profile_cart_update'),
 ]
