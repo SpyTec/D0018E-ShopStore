@@ -1,3 +1,5 @@
+from itertools import product
+
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
@@ -61,9 +63,8 @@ def add_to_cart(request, pk):
 def checkout(request):
     if not hasattr(request.user, 'cart'):
         return redirect('/login/?next=%s' % request.path)
-
     cart = request.user.cart
-    items = cart.cartitem_set
+    items = cart.cartitem_set.all
     return render(request, 'shop/checkout.html', {
         'cart': cart,
         'items': items
