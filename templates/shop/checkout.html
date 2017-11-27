@@ -5,9 +5,7 @@
 {% block content %}
     <div class="justify-content-md-center row">
         <div class="col col-md-9 col-lg-8 col-xl-7">
-            {#{{ formset }}#}
-            <h1>Cart</h1>
-            {% if formset.forms %}
+            <h1>Checkout</h1>
                 <form method="post" action="{% url "profile_cart" %}" class="form-inline">
                     {% csrf_token %}
                     <table class="table table-hover text-right">
@@ -18,28 +16,18 @@
                             <th scope="col">Price</th>
                             <th scope="col">Quantity</th>
                             <th scope="col">Cost</th>
-                            <th scope="col">Remove</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for cartitem in formset %}
+                        {% for cartitem in items.all %}
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
                                 <td><a href="#">{{ cartitem.instance.product.name }}</a></td>
                                 <td>{{ cartitem.instance.price_snapshot }}&nbsp;kr</td>
-                                <td>
-                                    <input class="input-group-addon form-control"
-                                           value="{{ cartitem.quantity.value|default_if_none:"" }}"
-                                           type="number" title="{{ cartitem.quantity.label }}"
-                                           min="1" max="{{ cartitem.instance.product.inventory }}"
-                                           name="{{ cartitem.quantity.html_name }}"/>
-                                </td>
+                                <td>{{ cartitem.quantity.value|default_if_none:"" }}</td>
                                 <td>
                                     {{ cartitem.instance.total_cost }}&nbsp;kr
                                     {{ cartitem.id }}
-                                </td>
-                                <td>
-                                    {{ cartitem.DELETE }}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -53,15 +41,9 @@
                     </table>
                     {{ formset.management_form }}
                     <div class="ml-auto">
-                        <input type="submit" value="Update cart" class="btn btn-secondary">
-                        <a href="{% url "shop_checkout" %}" class="btn btn-primary text-light">Buy</a>
+                        <a class="btn btn-primary text-light">Confirm & purchase</a>
                     </div>
                 </form>
-            {% else %}
-                <div>
-                    Cart is empty
-                </div>
-            {% endif %}
         </div>
     </div>
 {% endblock %}

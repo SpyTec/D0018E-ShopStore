@@ -2,7 +2,8 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
 from shop.models import Product, Category, CartItem, Cart
-from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import redirect, render
+from django.forms import inlineformset_factory
 from django.contrib.auth.decorators import login_required
 
 
@@ -54,3 +55,16 @@ def add_to_cart(request, pk):
     messages.info(request, "{} has been added to cart.".format(product.name))
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+@login_required()
+def checkout(request):
+    if not hasattr(request.user, 'cart'):
+        return redirect('/login/?next=%s' % request.path)
+
+    cart = request.user.cart
+    items = cart.cartitem_set
+    return render(request, 'shop/checkout.html', {
+        'cart': cart,
+        'items': items
+    })
