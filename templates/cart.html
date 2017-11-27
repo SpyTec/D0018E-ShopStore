@@ -1,0 +1,10 @@
+{% if request.user.is_authenticated %}
+<ul class="navbar-nav ml-auto">
+    {% url 'profile_cart' pk as profile_cart_url %}
+    <li class="nav-item{% if profile_cart_url in request.get_full_path %} active{% endif %}">
+        <a class="nav-link" href="{% url "profile_cart" %}">
+            Cart <span class="badge badge-light">4</span>
+        </a>
+    </li>
+</ul>
+{% endif %}
