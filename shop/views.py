@@ -83,7 +83,7 @@ def checkout_confirm(request):
         return redirect('/profile/cart/')
 
     cart = request.user.cart
-    items = cart.cartitem_set.all
+    items = cart.cartitem_set.all()
 
     new_order = Order(user=request.user)
     new_order.save()
@@ -91,9 +91,9 @@ def checkout_confirm(request):
     cart_count = cart.cartitem_set.count()
 
     # THIS PIECE OF SHIT CODE DOES NOT WORK RIGHT NOW
-    for x in range(1, cart_count):
-        order_product = OrderProduct(product=cart.cartitem_set.filter()[:x].get().product, order=new_order,
-                                     quantity=cart.cartitem_set.filter()[:x].get().quantity)
+    for item in items:
+        order_product = OrderProduct(product=item.product, order=new_order,
+                                     quantity=item.quantity)
         order_product.save()
 
     cart.delete()
