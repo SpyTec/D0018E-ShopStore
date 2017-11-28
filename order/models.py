@@ -15,7 +15,7 @@ class Order(models.Model):
     )
 
     ordered = models.DateTimeField(default=timezone.now)
-    order_status = models.CharField(max_length=1, choices=STATUS, default='A')
+    order_status = models.CharField(max_length=1, choices=STATUS, default='0')
     user = models.ForeignKey(User)
 
     def __str__(self):

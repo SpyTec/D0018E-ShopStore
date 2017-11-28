@@ -79,5 +79,11 @@ class CartItem(models.Model):
     def total_cost(self):
         return self.quantity * self.price_snapshot
 
+    def is_empty(self):
+        if self.objects.count() < 1:
+            return True
+        else:
+            return False
+
     def __str__(self):
         return "{}, price: {}".format(self.product.name, self.price_snapshot)

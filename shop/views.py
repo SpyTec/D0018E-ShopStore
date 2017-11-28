@@ -4,8 +4,9 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
 from shop.models import Product, Category, CartItem, Cart
+from order.models import Order, OrderProduct
 from django.shortcuts import redirect, render
-from django.forms import inlineformset_factory
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 
@@ -61,11 +62,15 @@ def add_to_cart(request, pk):
 
 @login_required()
 def checkout(request):
+    if not hasattr(request.user, 'cart'):
+        return redirect('/profile/cart/')
+
     cart = request.user.cart
     items = cart.cartitem_set.all
-    #if not hasattr(request.user, 'cart'):
+
     if cart.cartitem_set.count() < 1:
         return redirect('/profile/cart/')
+
     return render(request, 'shop/checkout.html', {
         'cart': cart,
         'items': items
@@ -74,4 +79,23 @@ def checkout(request):
 
 @login_required()
 def checkout_confirm(request):
-    return None
+    if not hasattr(request.user, 'cart'):
+        return redirect('/profile/cart/')
+
+    cart = request.user.cart
+    items = cart.cartitem_set.all
+
+    new_order = Order(user=request.user)
+    new_order.save()
+
+    cart_count = cart.cartitem_set.count()
+
+    # THIS PIECE OF SHIT CODE DOES NOT WORK RIGHT NOW
+    for x in range(1, cart_count):
+        order_product = OrderProduct(product=cart.cartitem_set.filter()[:x].get().product, order=new_order,
+                                     quantity=cart.cartitem_set.filter()[:x].get().quantity)
+        order_product.save()
+
+    cart.delete()
+
+    return HttpResponseRedirect(reverse('profile_orders'))
