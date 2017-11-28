@@ -8,6 +8,7 @@ from order.models import Order, OrderProduct
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 
 
 class Overview(generic.ListView):
@@ -88,14 +89,10 @@ def checkout_confirm(request):
     new_order = Order(user=request.user)
     new_order.save()
 
-    cart_count = cart.cartitem_set.count()
-
-    # THIS PIECE OF SHIT CODE DOES NOT WORK RIGHT NOW
-    for item in items:
-        order_product = OrderProduct(product=item.product, order=new_order,
-                                     quantity=item.quantity)
-        order_product.save()
+    with transaction.atomic():
+        for item in items:
+            order_product = OrderProduct(product=item.product, order=new_order, quantity=item.quantity)
+            order_product.save()
 
     cart.delete()
-
     return HttpResponseRedirect(reverse('profile_orders'))
