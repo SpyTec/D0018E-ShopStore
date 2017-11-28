@@ -61,11 +61,17 @@ def add_to_cart(request, pk):
 
 @login_required()
 def checkout(request):
-    if not hasattr(request.user, 'cart'):
-        return redirect('/login/?next=%s' % request.path)
     cart = request.user.cart
     items = cart.cartitem_set.all
+    #if not hasattr(request.user, 'cart'):
+    if cart.cartitem_set.count() < 1:
+        return redirect('/profile/cart/')
     return render(request, 'shop/checkout.html', {
         'cart': cart,
         'items': items
     })
+
+
+@login_required()
+def checkout_confirm(request):
+    return None
