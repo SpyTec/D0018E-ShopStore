@@ -12,6 +12,7 @@ class Order(models.Model):
         ("0", 'Verified'),
         ("1", 'Shipped'),
         ("2", 'Received'),
+        ("3", 'Refunded'),
     )
 
     ordered = models.DateTimeField(default=timezone.now)
