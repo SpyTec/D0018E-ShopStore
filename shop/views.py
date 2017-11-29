@@ -93,6 +93,6 @@ def checkout_confirm(request):
         for item in items:
             order_product = OrderProduct(product=item.product, order=new_order, quantity=item.quantity)
             order_product.save()
+        cart.delete()
 
-    cart.delete()
     return HttpResponseRedirect(reverse('profile_orders'))
