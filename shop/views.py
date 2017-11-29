@@ -1,5 +1,3 @@
-from itertools import product
-
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
@@ -8,7 +6,7 @@ from order.models import Order, OrderProduct
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
+from django.db import transaction, IntegrityError
 
 
 class Overview(generic.ListView):
@@ -90,9 +88,19 @@ def checkout_confirm(request):
     new_order.save()
 
     with transaction.atomic():
-        for item in items:
-            order_product = OrderProduct(product=item.product, order=new_order, quantity=item.quantity)
-            order_product.save()
-        cart.delete()
+        try:
+            for item in items:
+                p = Product.objects.get(name=item.product.name)
+                if p.inventory >= item.quantity:
+                    order_product = OrderProduct(product=item.product, order=new_order, quantity=item.quantity)
+                    order_product.save()
+                    p.inventory = p.inventory - item.quantity
+                    p.save()
+                else:
+                    raise IntegrityError
+            cart.delete()
+        except IntegrityError:
+            messages.warning(request, "Transaction failed, not enough in inventory!")
+            return HttpResponseRedirect(reverse('profile_cart'))
 
     return HttpResponseRedirect(reverse('profile_orders'))
