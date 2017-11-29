@@ -84,20 +84,23 @@ def checkout_confirm(request):
     cart = request.user.cart
     items = cart.cartitem_set.all()
 
-    new_order = Order(user=request.user)
-    new_order.save()
-
     with transaction.atomic():
         try:
+            # Check if sufficient inventory for whole order, else raise error before creating order
             for item in items:
                 p = Product.objects.get(name=item.product.name)
-                if p.inventory >= item.quantity:
-                    order_product = OrderProduct(product=item.product, order=new_order, quantity=item.quantity)
-                    order_product.save()
-                    p.inventory = p.inventory - item.quantity
-                    p.save()
-                else:
+                if item.quantity > p.inventory:
                     raise IntegrityError
+
+            new_order = Order(user=request.user)
+            new_order.save()
+
+            for item in items:
+                p = Product.objects.get(name=item.product.name)
+                order_product = OrderProduct(product=item.product, order=new_order, quantity=item.quantity)
+                order_product.save()
+                p.inventory = p.inventory - item.quantity
+                p.save()
             cart.delete()
         except IntegrityError:
             messages.warning(request, "Transaction failed, not enough in inventory!")
