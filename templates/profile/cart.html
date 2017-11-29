@@ -54,7 +54,7 @@
                     {{ formset.management_form }}
                     <div class="ml-auto">
                         <input type="submit" value="Update cart" class="btn btn-secondary">
-                        <a class="btn btn-primary text-light">Buy</a>
+                        <a href="{% url "shop_checkout" %}" class="btn btn-primary text-light">Buy</a>
                     </div>
                 </form>
             {% else %}

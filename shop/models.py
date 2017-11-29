@@ -64,7 +64,7 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='in_cart_product')
     user_cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     price_snapshot = models.PositiveIntegerField(default=0)
     quantity = models.PositiveIntegerField(default=1,
@@ -78,6 +78,12 @@ class CartItem(models.Model):
     @property
     def total_cost(self):
         return self.quantity * self.price_snapshot
+
+    def is_empty(self):
+        if self.objects.count() < 1:
+            return True
+        else:
+            return False
 
     def __str__(self):
         return "{}, price: {}".format(self.product.name, self.price_snapshot)

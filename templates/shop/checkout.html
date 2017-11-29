@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+    <div class="justify-content-md-center row">
+        <div class="col col-md-9 col-lg-8 col-xl-7">
+            <h1>Checkout</h1>
+                <form class="form-inline">
+                    {% csrf_token %}
+                    <table class="table table-hover text-right">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Article</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Cost</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for cartitem in items %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ cartitem.product.name }}</td>
+                                <td>{{ cartitem.price_snapshot }}&nbsp;kr</td>
+                                <td>{{ cartitem.quantity|default_if_none:"" }}</td>
+                                <td>
+                                    {{ cartitem.total_cost }}&nbsp;kr
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <th scope="row" colspan="5" class="text-right">
+                                Total cost: <br>
+                                {{ cart.items.cart_cost|default_if_none:"0" }}&nbsp;kr
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="ml-auto">
+                        <a href="{% url "shop_checkout_confirm" %}" class="btn btn-primary text-light">Confirm & purchase</a>
+                    </div>
+                </form>
+        </div>
+    </div>
+{% endblock %}
