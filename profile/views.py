@@ -9,6 +9,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, FormView, UpdateView
 
+from order.models import Order
 from profile import forms
 from shop.models import CartItem, Cart
 
@@ -25,6 +26,11 @@ class Orders(LoginRequiredMixin, DetailView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+class OrderDetail(LoginRequiredMixin, DetailView):
+    template_name = 'profile/orderdetail.html'
+    model = Order
 
 
 class RegistrationView(FormView):

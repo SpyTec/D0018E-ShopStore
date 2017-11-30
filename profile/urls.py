@@ -7,6 +7,7 @@ from django.contrib.auth import views as admin
 urlpatterns = [
     url(r'^$', views.Overview.as_view(), name="profile"),
     url(r'orders/$', views.Orders.as_view(), name="profile_orders"),
+    url(r'order/(?P<pk>[0-9]+)/$', views.OrderDetail.as_view(), name="profile_orderdetail"),
     # Authentication
     url(r'^login/$', admin.LoginView.as_view(), name='login'),
     url(r'^logout/$', admin.LogoutView.as_view(), name='logout'),

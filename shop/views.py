@@ -106,4 +106,4 @@ def checkout_confirm(request):
             messages.warning(request, "Transaction failed, not enough in inventory!")
             return HttpResponseRedirect(reverse('profile_cart'))
 
-    return HttpResponseRedirect(reverse('profile_orders'))
+        return HttpResponseRedirect(reverse('profile_orderdetail', args=(new_order.pk,)))

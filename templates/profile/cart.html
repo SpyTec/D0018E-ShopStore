@@ -31,7 +31,10 @@
                                     <input class="input-group-addon form-control"
                                            value="{{ cartitem.quantity.value|default_if_none:"" }}"
                                            type="number" title="{{ cartitem.quantity.label }}"
-                                           min="1" max="{{ cartitem.instance.product.inventory }}"
+                                           min="1"
+                                           {% if cartitem.instance.product.inventory <= 0 %}
+                                               max="{{ cartitem.instance.product.inventory }}"
+                                           {% endif %}
                                            name="{{ cartitem.quantity.html_name }}"/>
                                 </td>
                                 <td>

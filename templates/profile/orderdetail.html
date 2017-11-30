@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Order {{ order.pk }}{% endblock %}
+
+{% block content %}
+    <div class="justify-content-md-center row">
+        <div class="col col-md-9 col-lg-8 col-xl-7">
+            <h1>Order {{ order.pk }}</h1>
+            <p>
+                Date ordered: {{ order.ordered }}
+            </p>
+            <p>
+                Order status: {{ order.get_order_status_display }}
+            </p>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order_product in order.orderproduct_set.all %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ order_product.product.name }}</td>
+                            <td>{{ order_product.quantity }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
