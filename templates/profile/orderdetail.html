@@ -12,6 +12,9 @@
             <p>
                 Order status: {{ order.get_order_status_display }}
             </p>
+            <p>
+                Total cost: {{order.items.order_cost|default_if_none:"0"}} kr
+            </p>
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -27,6 +30,7 @@
                             <th scope="row">{{ forloop.counter }}</th>
                             <td>{{ order_product.product.name }}</td>
                             <td>{{ order_product.quantity }}</td>
+                            <td>{{ order_product.cost }} kr</td>
                         </tr>
                     {% endfor %}
                 </tbody>

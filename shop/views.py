@@ -97,7 +97,7 @@ def checkout_confirm(request):
 
             for item in items:
                 p = Product.objects.get(name=item.product.name)
-                order_product = OrderProduct(product=item.product, order=new_order, quantity=item.quantity)
+                order_product = OrderProduct(product=item.product, order=new_order, quantity=item.quantity, cost=item.product.price)
                 order_product.save()
                 p.inventory = p.inventory - item.quantity
                 p.save()

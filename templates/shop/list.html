@@ -15,7 +15,11 @@
                     </div>
                     <div class="card-footer text-right">
                         <div class="row">
-                            {% include "shop/buy_button.html" %}
+                            {% if product.inventory >= 1 %}
+                                {% include "shop/buy_button.html" %}
+                            {% else %}
+                                {% include "shop/out_off_stock.html" %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
