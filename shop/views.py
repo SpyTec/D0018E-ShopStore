@@ -11,6 +11,7 @@ from django.db import transaction, IntegrityError
 
 class Overview(generic.ListView):
     template_name = 'shop/list.html'
+    paginate_by = 25
     model = Product
 
 
@@ -19,9 +20,14 @@ class ProductView(generic.DetailView):
     model = Product
 
 
-class CategoryView(generic.DetailView):
+class CategoryView(generic.ListView):
+    model = Product
     template_name = 'shop/list_category.html'
-    model = Category
+    paginate_by = 25
+
+    def get_queryset(self):
+        pk = int(self.kwargs['pk'])
+        return Product.objects.filter(categories__product=pk)
 
 
 class CategoryOverview(generic.ListView):
