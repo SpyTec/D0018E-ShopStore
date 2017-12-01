@@ -31,13 +31,16 @@ class Product(models.Model):
         ordering = ('name',)
 
 
-class Grading(models.Model):
+class Rating(models.Model):
     user = models.ForeignKey(User)
     product = models.ForeignKey(Product)
-    grading = models.BooleanField()
+    rating = models.BooleanField()
+
+    class Meta:
+        unique_together = ('user', 'product')
 
     def __str__(self):
-        return "User {} grade {}".format(self.user.username, self.grading)
+        return "User {} grade {}".format(self.user.username, self.rating)
 
 
 class Comment(models.Model):

@@ -4,8 +4,37 @@
 
 {% block shop %}
     <h1>{{ product.name }}</h1>
+    {% if user.is_authenticated %}
+        Give your rating
+        <div class="btn-group">
+            {% if product_rating == None %}
+                <a type="button" class="btn btn-outline-success" href="{% url "product_rate" product.pk 1 %}">Good</a>
+                <a type="button" class="btn btn-outline-danger" href="{% url "product_rate" product.pk 0 %}">Bad</a>
+            {% else %}
+                {% if product_rating.rating %}
+                    <a type="button" class="btn btn-success" href="{% url "product_rate" product.pk 1 %}">Good</a>
+                    <a type="button" class="btn btn-outline-danger" href="{% url "product_rate" product.pk 0 %}">Bad</a>
+                {% else %}
+                    <a type="button" class="btn btn-outline-success"
+                       href="{% url "product_rate" product.pk 1 %}">Good</a>
+                    <a type="button" class="btn btn-danger" href="{% url "product_rate" product.pk 0 %}">Bad</a>
+                {% endif %}
+            {% endif %}
+        </div>
+        {% if positive_rating_percentage != None %}
+            <div>
+                Rating:
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar"
+                         style="width: {{ positive_rating_percentage }}%"></div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+    <br>
+    <h3>Description</h3>
     <p>{{ product.description }}</p>
-    <div class="">
+    <div>
         {% include "shop/buy_button.html" %}
     </div>
 {% endblock %}

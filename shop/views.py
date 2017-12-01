@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
-from shop.models import Product, Category, CartItem, Cart
+from shop.models import Product, Category, CartItem, Cart, Rating
 from order.models import Order, OrderProduct
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -9,14 +9,54 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction, IntegrityError
 
 
+def product_view(request, pk):
+    product = Product.objects.get(pk=pk)
+
+    product_rating = None
+    if request.user.is_authenticated():
+        product_rating = product.rating_set.filter(product=product, user=request.user)
+        if product_rating.count() == 0:
+            product_rating = None
+        product_rating = product_rating.first()
+
+    ratings = product.rating_set
+    positive_rating_percentage = None
+    all_ratings = ratings.all().count()
+
+    if all_ratings > 0:
+        positive_ratings = ratings.filter(rating=True).count()
+
+        if positive_ratings == 0:
+            positive_rating_percentage = 0
+        else:
+            positive_rating_percentage = (positive_ratings / all_ratings) * 100
+
+    return render(request, 'shop/detail.html', {
+        'product': product,
+        'product_rating': product_rating,
+        'positive_rating_percentage': positive_rating_percentage
+    })
+
+
+@login_required()
+def rate_product(request, pk, rating):
+    product = Product.objects.get(pk=pk)
+
+    order = Order.objects.get(user=request.user)
+    order_items = order.orderproduct_set.filter(product=product)
+    if order_items.count() == 0:
+        messages.warning(request, "You need to buy the product first!")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+    Rating.objects.update_or_create(user=request.user, product=product, defaults={'rating': rating})
+
+    messages.info(request, "Your rating has been registered!")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
 class Overview(generic.ListView):
     template_name = 'shop/list.html'
     paginate_by = 25
-    model = Product
-
-
-class ProductView(generic.DetailView):
-    template_name = 'shop/detail.html'
     model = Product
 
 
@@ -103,7 +143,8 @@ def checkout_confirm(request):
 
             for item in items:
                 p = Product.objects.get(name=item.product.name)
-                order_product = OrderProduct(product=item.product, order=new_order, quantity=item.quantity, cost=item.product.price)
+                order_product = OrderProduct(product=item.product, order=new_order, quantity=item.quantity,
+                                             cost=item.product.price)
                 order_product.save()
                 p.inventory = p.inventory - item.quantity
                 p.save()

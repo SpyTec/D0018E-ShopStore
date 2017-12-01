@@ -7,7 +7,7 @@
         <div class="list-group">
         {% for category in categories %}
             {% url 'shop_category' pk=category.pk as shop_category %}
-            <a href="{% url "shop_category" category.pk %}" class="list-group-item list-group-item-action{% if shop_category == request.get_full_path %} active{% endif %}">
+            <a href="{% url "shop_category" category.pk %}" class="list-group-item list-group-item-action{% if shop_category in request.get_full_path %} active{% endif %}">
                 {{ category }}
             </a>
         {% endfor %}
