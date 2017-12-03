@@ -101,6 +101,22 @@ class RatingTests(TestCase):
         self.assertEqual(0, Rating.objects.count())
         self.assertContains(response, "<h1>Login</h1>")
 
+    def test_user_can_rate_after_buying_product_more_than_once(self):
+        self.client.force_login(self.user)
+
+        order = Order.objects.create(user=self.user)
+        OrderProduct.objects.create(order=order, quantity=1, product=self.product, cost=5)
+
+        order = Order.objects.create(user=self.user)
+        OrderProduct.objects.create(order=order, quantity=2, product=self.product, cost=4)
+
+        _rating = 1
+
+        response = self.client.post(reverse('product_rate', args=(self.product.pk, _rating,)), follow=True)
+        ratingDb = Rating.objects.get(user=self.user, product=self.product, rating=_rating)
+        self.assertContains(response, "Your rating has been registered")
+        self.assertAlmostEqual(ratingDb.rating, _rating)
+
 
 class CartTests(TestCase):
     def setUp(self):
@@ -176,7 +192,7 @@ class RootTests(TestCase):
         self.assertContains(response, "i7")
 
     def test_category_nonExistingCategory(self):
-        response = self.client.get(reverse('shop_category', args=(0,)))
+        response = self.client.get('/category/0')
         self.assertEqual(response.status_code, 404)
 
     def test_product_root_page(self):

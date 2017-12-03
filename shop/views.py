@@ -45,13 +45,19 @@ def rate_product(request, pk, rating):
     product = Product.objects.get(pk=pk)
 
     try:
-        order = Order.objects.get(user=request.user)
+        orders = Order.objects.filter(user=request.user)
     except ObjectDoesNotExist:
         messages.warning(request, "You need to buy the product first")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-    order_items = order.orderproduct_set.filter(product=product)
-    if order_items.count() == 0:
+    has_bought_item = False
+    for order in orders:
+        order_items = order.orderproduct_set.filter(product=product)
+        if order_items.count() > 0:
+            has_bought_item = True
+            break
+
+    if not has_bought_item:
         messages.warning(request, "You need to buy the product first")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
