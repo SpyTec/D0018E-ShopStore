@@ -5,10 +5,9 @@
 {% block shop %}
     <h1>Items</h1>
     <div class="card-columns row">
-        {% for product in category.product_set.all %}
+        {% for product in object_list %}
             <div class="col col-12 col-md-6 col-lg-6 col-xl-4">
                 <div class="card">
-                    {#          <img class="card-img-top" src="#" alt="Card image cap">#}
                     <div class="card-body">
                         <h4 class="card-title"><a href="{% url "shop_detail" product.pk %}">{{ product.name }}</a></h4>
                         <p class="card-text">{{ product.description }}</p>
@@ -22,4 +21,5 @@
             </div>
         {% endfor %}
     </div>
+    {% include "paginate.html" %}
 {% endblock %}
