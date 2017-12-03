@@ -72,15 +72,25 @@ class Overview(generic.ListView):
     paginate_by = 25
     model = Product
 
+    def get_ordering(self):
+        ordering = self.request.GET.get('ordering', 'name')
+        # validate ordering here
+        return ordering
+
 
 class CategoryView(generic.ListView):
     model = Product
     template_name = 'shop/list_category.html'
     paginate_by = 25
 
+    def get_ordering(self):
+        ordering = self.request.GET.get('ordering', 'name')
+        # validate ordering here
+        return ordering
+
     def get_queryset(self):
         pk = int(self.kwargs['pk'])
-        return Product.objects.filter(categories__product=pk)
+        return Product.objects.filter(categories__product=pk).order_by(self.get_ordering())
 
 
 class CategoryOverview(generic.ListView):

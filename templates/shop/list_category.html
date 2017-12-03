@@ -4,6 +4,7 @@
 
 {% block shop %}
     <h1>Items</h1>
+    {% include "shop/ordering_button.html" %}
     <div class="card-columns row">
         {% for product in object_list %}
             <div class="col col-12 col-md-6 col-lg-6 col-xl-4">
