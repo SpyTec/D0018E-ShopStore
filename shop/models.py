@@ -21,7 +21,7 @@ class Product(models.Model):
     description = models.TextField()
     price = models.PositiveIntegerField()
     inventory = models.PositiveIntegerField()
-    not_for_sale = models.BooleanField(default=0)
+    not_for_sale = models.BooleanField(default=False)
     categories = models.ManyToManyField(Category)
 
     def __str__(self):
