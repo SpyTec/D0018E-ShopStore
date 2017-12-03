@@ -21,15 +21,15 @@
                 {% endif %}
             {% endif %}
         </div>
-        {% if positive_rating_percentage != None %}
-            <div>
-                Rating:
-                <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar"
-                         style="width: {{ positive_rating_percentage }}%"></div>
-                </div>
+    {% endif %}
+    {% if positive_rating_percentage != None %}
+        <div>
+            Rating:
+            <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar"
+                     style="width: {{ positive_rating_percentage }}%"></div>
             </div>
-        {% endif %}
+        </div>
     {% endif %}
     <br>
     <h3>Description</h3>

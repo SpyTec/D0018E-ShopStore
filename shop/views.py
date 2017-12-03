@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.views import generic
 from shop.models import Product, Category, CartItem, Cart, Rating
@@ -17,7 +18,8 @@ def product_view(request, pk):
         product_rating = product.rating_set.filter(product=product, user=request.user)
         if product_rating.count() == 0:
             product_rating = None
-        product_rating = product_rating.first()
+        else:
+            product_rating = product_rating.first()
 
     ratings = product.rating_set
     positive_rating_percentage = None
@@ -42,10 +44,15 @@ def product_view(request, pk):
 def rate_product(request, pk, rating):
     product = Product.objects.get(pk=pk)
 
-    order = Order.objects.get(user=request.user)
+    try:
+        order = Order.objects.get(user=request.user)
+    except ObjectDoesNotExist:
+        messages.warning(request, "You need to buy the product first")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
     order_items = order.orderproduct_set.filter(product=product)
     if order_items.count() == 0:
-        messages.warning(request, "You need to buy the product first!")
+        messages.warning(request, "You need to buy the product first")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
     Rating.objects.update_or_create(user=request.user, product=product, defaults={'rating': rating})
