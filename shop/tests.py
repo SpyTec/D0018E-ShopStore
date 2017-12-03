@@ -95,6 +95,12 @@ class RatingTests(TestCase):
         self.assertContains(response, "Your rating has been registered")
         self.assertAlmostEqual(ratingDb.rating, _rating)
 
+    def test_logged_out_user_cannot_add_rating(self):
+        _rating = 1
+        response = self.client.post(reverse('product_rate', args=(self.product.pk, _rating,)), follow=True)
+        self.assertEqual(0, Rating.objects.count())
+        self.assertContains(response, "<h1>Login</h1>")
+
 
 class CartTests(TestCase):
     def setUp(self):
