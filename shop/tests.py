@@ -176,7 +176,7 @@ class RootTests(TestCase):
         self.assertContains(response, "i7")
 
     def test_category_nonExistingCategory(self):
-        response = self.client.get(reverse('shop_category', args=(0,)))
+        response = self.client.get('/category/0')
         self.assertEqual(response.status_code, 404)
 
     def test_product_root_page(self):
