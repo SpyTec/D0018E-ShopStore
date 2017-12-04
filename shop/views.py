@@ -33,6 +33,9 @@ def product_view(request, pk):
         else:
             positive_rating_percentage = (positive_ratings / all_ratings) * 100
 
+
+
+
     return render(request, 'shop/detail.html', {
         'product': product,
         'product_rating': product_rating,
