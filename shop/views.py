@@ -14,6 +14,7 @@ from django.db import transaction, IntegrityError
 
 def product_view(request, pk):
     product = Product.objects.get(pk=pk)
+    comments = Comment.objects.filter(product=product)
 
     if request.method == 'POST' and request.user.is_authenticated:
         form = CommentForm(request.POST)
@@ -46,7 +47,8 @@ def product_view(request, pk):
     return render(request, 'shop/detail.html', {
         'product': product,
         'product_rating': product_rating,
-        'positive_rating_percentage': positive_rating_percentage
+        'positive_rating_percentage': positive_rating_percentage,
+        'comments': comments
     })
 
 

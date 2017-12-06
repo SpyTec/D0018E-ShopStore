@@ -53,4 +53,15 @@
         <input class="btn btn-primary" type="submit" value="Submit"/>
     </form>
     {% endif %}
+
+    {% for comment in comments %}
+        <div class="card" style="width: 20rem;">
+            <div class="card-body">
+                <h4 class="card-title">{{ comment.user.email }}</h4>
+                <h6 class="card-subtitle mb-2 text-muted">2017-12-06 16:00</h6>
+                <p class="card-text">{{ comment.comment }}</p>
+            </div>
+        </div>
+    {% endfor %}
+
 {% endblock %}
