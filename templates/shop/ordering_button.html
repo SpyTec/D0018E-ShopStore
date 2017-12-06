@@ -1,0 +1,25 @@
+<form method="get" action="{{ request.get_full_path }}">
+    <select name="ordering">
+        <option value="name"
+                {% if request.GET.ordering == 'name' %}
+                selected="selected"
+                {% endif %}
+        >Name</option>
+        <option value="-name"
+                {% if request.GET.ordering == '-name' %}
+                selected="selected"
+                {% endif %}
+        >Name asc.</option>
+        <option value="price"
+                {% if request.GET.ordering == 'price' %}
+                selected="selected"
+                {% endif %}
+        >Cheapest</option>
+        <option value="-price"
+                {% if request.GET.ordering == '-price' %}
+                selected="selected"
+                {% endif %}
+        >Most expensive</option>
+    </select>
+    <input type="submit" value="Change order">
+</form>
