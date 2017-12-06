@@ -2,7 +2,9 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.views import generic
-from shop.models import Product, Category, CartItem, Cart, Rating
+
+from shop.forms import CommentForm
+from shop.models import Product, Category, CartItem, Cart, Rating, Comment
 from order.models import Order, OrderProduct
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -12,6 +14,14 @@ from django.db import transaction, IntegrityError
 
 def product_view(request, pk):
     product = Product.objects.get(pk=pk)
+
+    if request.method == 'POST' and request.user.is_authenticated:
+        form = CommentForm(request.POST)
+        if form.is_valid() :
+            new_comment = Comment(user=request.user, product=product, comment=form.cleaned_data['comment'])
+            new_comment.save()
+        else:
+            form = CommentForm()
 
     product_rating = None
     if request.user.is_authenticated():
@@ -32,9 +42,6 @@ def product_view(request, pk):
             positive_rating_percentage = 0
         else:
             positive_rating_percentage = (positive_ratings / all_ratings) * 100
-
-
-
 
     return render(request, 'shop/detail.html', {
         'product': product,
