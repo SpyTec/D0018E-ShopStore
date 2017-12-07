@@ -2,7 +2,9 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.views import generic
-from shop.models import Product, Category, CartItem, Cart, Rating
+
+from shop.forms import CommentForm, SearchForm
+from shop.models import Product, Category, CartItem, Cart, Rating, Comment
 from order.models import Order, OrderProduct
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -12,6 +14,15 @@ from django.db import transaction, IntegrityError
 
 def product_view(request, pk):
     product = Product.objects.get(pk=pk)
+    comments = Comment.objects.filter(product=product)
+
+    if request.method == 'POST' and request.user.is_authenticated:
+        form = CommentForm(request.POST)
+        if form.is_valid() :
+            new_comment = Comment(user=request.user, product=product, comment=form.cleaned_data['comment'])
+            new_comment.save()
+        else:
+            form = CommentForm()
 
     product_rating = None
     if request.user.is_authenticated():
@@ -36,7 +47,8 @@ def product_view(request, pk):
     return render(request, 'shop/detail.html', {
         'product': product,
         'product_rating': product_rating,
-        'positive_rating_percentage': positive_rating_percentage
+        'positive_rating_percentage': positive_rating_percentage,
+        'comments': comments
     })
 
 
@@ -177,3 +189,25 @@ def checkout_confirm(request):
             return HttpResponseRedirect(reverse('profile_cart'))
 
         return HttpResponseRedirect(reverse('profile_orderdetail', args=(new_order.pk,)))
+
+
+def search_view(request):
+    # GET method
+    if 'query' in request.GET:
+        products_set = Product.objects.filter(name__contains=request.GET['query'])
+        return render(request, 'shop/list.html', {
+            'object_list': products_set
+        })
+    # POST method
+    # if request.method == 'GET':
+    #     search_form = SearchForm(request.GET)
+    #     if search_form.is_valid():
+    #         print("VALID")
+    #         products_set = Product.objects.filter(name__contains=search_form.cleaned_data['query'])
+    #         return render(request, 'shop/list.html', {
+    #             'object_list': products_set
+    #         })
+    #     else:
+    #         print("NOT valid")
+    #         return None
+    # return None

@@ -5,6 +5,7 @@ from shop import views
 
 urlpatterns = [
     url(r'^$', views.Overview.as_view(), name='shop'),
+    url(r'search/$', views.search_view, name='shop_search'),
     url(r'checkout/$', views.checkout, name='shop_checkout'),
     url(r'checkout/confirm/$', views.checkout_confirm, name='shop_checkout_confirm'),
     url(r'product/(?P<pk>[0-9]+)/$', views.product_view, name='shop_detail'),

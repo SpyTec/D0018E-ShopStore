@@ -1,5 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db.models import Sum, F
+from django.utils import timezone
 
 from profile.models import User
 from django.db import models
@@ -44,6 +45,7 @@ class Rating(models.Model):
 
 
 class Comment(models.Model):
+    time = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User)
     product = models.ForeignKey(Product)
     comment = models.TextField()
