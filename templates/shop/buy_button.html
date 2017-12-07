@@ -1,10 +1,10 @@
-<div class="col col-4">{{ product.price }}&nbsp;kr</div>
+<div class="col col-4 font-weight-bold">{{ product.price }}&nbsp;kr</div>
 <form method="post" action="{% url 'shop_add_to_cart' product.pk %}"
-      class="btn-group col col-8 row" role="group" aria-label="Buy amount">
+      class="btn-group col col-8 row" aria-label="Buy amount">
     {% csrf_token %}
-    <input type="submit" class="btn btn-primary col col-4" value="Buy"/>
+    <input type="submit" class="btn btn-primary col col-4 rounded" value="Buy"/>
     <input type="number" class="form-control col col-8" title="Quantity"
            name="quantity" min="1" max="{{ product.inventory }}">
     <input type="hidden" name="next" value="{{ next }}"/>
-    <p>Inventory: {{ product.inventory }}</p>
 </form>
+<p>Inventory: {{ product.inventory }}</p>

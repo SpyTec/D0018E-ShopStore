@@ -3,66 +3,74 @@
 {% block title %}Shop{% endblock %}
 
 {% block shop %}
-    <h1>{{ product.name }}</h1>
-    {% if user.is_authenticated %}
-        Give your rating
-        <div class="btn-group">
-            {% if product_rating == None %}
-                <a type="button" class="btn btn-outline-success" href="{% url "product_rate" product.pk 1 %}">Good</a>
-                <a type="button" class="btn btn-outline-danger" href="{% url "product_rate" product.pk 0 %}">Bad</a>
-            {% else %}
-                {% if product_rating.rating %}
-                    <a type="button" class="btn btn-success" href="{% url "product_rate" product.pk 1 %}">Good</a>
-                    <a type="button" class="btn btn-outline-danger" href="{% url "product_rate" product.pk 0 %}">Bad</a>
-                {% else %}
+    <div class="border rounded p-2 bg-white">
+        <h1>{{ product.name }}</h1>
+        {% if user.is_authenticated %}
+            Give your rating
+            <div class="btn-group">
+                {% if product_rating == None %}
                     <a type="button" class="btn btn-outline-success"
                        href="{% url "product_rate" product.pk 1 %}">Good</a>
-                    <a type="button" class="btn btn-danger" href="{% url "product_rate" product.pk 0 %}">Bad</a>
+                    <a type="button" class="btn btn-outline-danger" href="{% url "product_rate" product.pk 0 %}">Bad</a>
+                {% else %}
+                    {% if product_rating.rating %}
+                        <a type="button" class="btn btn-success" href="{% url "product_rate" product.pk 1 %}">Good</a>
+                        <a type="button" class="btn btn-outline-danger"
+                           href="{% url "product_rate" product.pk 0 %}">Bad</a>
+                    {% else %}
+                        <a type="button" class="btn btn-outline-success"
+                           href="{% url "product_rate" product.pk 1 %}">Good</a>
+                        <a type="button" class="btn btn-danger" href="{% url "product_rate" product.pk 0 %}">Bad</a>
+                    {% endif %}
                 {% endif %}
+            </div>
+        {% endif %}
+        {% if positive_rating_percentage != None %}
+            <div>
+                Rating:
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar"
+                         style="width: {{ positive_rating_percentage }}%"></div>
+                </div>
+            </div>
+        {% endif %}
+        <br>
+        <h3>Description</h3>
+        <p>{{ product.description }}</p>
+        <div>
+            {% if product.inventory >= 1 %}
+                {% include "shop/buy_button.html" %}
+            {% else %}
+                {% include "shop/out_off_stock.html" %}
             {% endif %}
         </div>
-    {% endif %}
-    {% if positive_rating_percentage != None %}
-        <div>
-            Rating:
-            <div class="progress">
-                <div class="progress-bar bg-success" role="progressbar"
-                     style="width: {{ positive_rating_percentage }}%"></div>
-            </div>
-        </div>
-    {% endif %}
-    <br>
-    <h3>Description</h3>
-    <p>{{ product.description }}</p>
-    <div>
-        {% if product.inventory >= 1 %}
-            {% include "shop/buy_button.html" %}
-        {% else %}
-            {% include "shop/out_off_stock.html" %}
-        {% endif %}
     </div>
     <br>
     {% if user.is_authenticated %}
-    <h3>Write a comment</h3>
-    <div>
-        <form method="post" action="{% url 'shop_detail' product.pk %}">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="comment">Comment:</label>
-                <textarea class="form-control" rows="5" id="comment" name="comment"></textarea>
-            </div>
-            <input class="btn btn-primary" type="submit" value="Submit"/>
-        </form>
-    </div>
+        <h3>Write a comment</h3>
+        <div>
+            <form method="post" action="{% url 'shop_detail' product.pk %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <textarea class="form-control" rows="5" id="comment" name="comment" title="Comment" placeholder="Comment"></textarea>
+                </div>
+                <input class="btn btn-primary" type="submit" value="Submit"/>
+            </form>
+        </div>
     {% endif %}
     <br>
     <h3>Comments</h3>
+    {% if not comments %}
+        <div class="mb-3 font-italic">No comments</div>
+    {% endif %}
     {% for comment in comments %}
-        <div class="card" style="width: 100%">
+        <div class="card mb-3">
+            <h4 class="card-header">{{ comment.user.first_name }}</h4>
             <div class="card-body">
-                <h4 class="card-title">{{ comment.user.email }}</h4>
-                <h6 class="card-subtitle mb-2 text-muted">{{ comment.time }}</h6>
                 <p class="card-text">{{ comment.comment }}</p>
+            </div>
+            <div class="card-footer text-muted">
+                {{ comment.time }}
             </div>
         </div>
     {% endfor %}

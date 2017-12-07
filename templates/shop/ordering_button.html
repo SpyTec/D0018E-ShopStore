@@ -1,25 +1,33 @@
-<form method="get" action="{{ request.get_full_path }}">
-    <select name="ordering">
+<form method="get" action="{{ request.get_full_path }}" class="form-inline pb-2">
+<div class="input-group">
+    <select class="form-control" name="ordering" title="Select product ordering">
         <option value="name"
                 {% if request.GET.ordering == 'name' %}
                 selected="selected"
                 {% endif %}
-        >Name</option>
+        >Name
+        </option>
         <option value="-name"
                 {% if request.GET.ordering == '-name' %}
                 selected="selected"
                 {% endif %}
-        >Name asc.</option>
+        >Name asc.
+        </option>
         <option value="price"
                 {% if request.GET.ordering == 'price' %}
                 selected="selected"
                 {% endif %}
-        >Cheapest</option>
+        >Cheapest
+        </option>
         <option value="-price"
                 {% if request.GET.ordering == '-price' %}
                 selected="selected"
                 {% endif %}
-        >Most expensive</option>
+        >Most expensive
+        </option>
     </select>
-    <input type="submit" value="Change order">
+    <span class="input-group-btn">
+        <input type="submit" value="Change order" class="btn btn-primary">
+    </span>
+</div>
 </form>

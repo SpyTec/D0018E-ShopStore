@@ -46,12 +46,11 @@
                 </li>
             {% endif %}
         </ul>
-        <ul style="margin-bottom: 0px;">
-            <form class="navbar-form navbar-right" role="search" method="get" action="{% url 'shop_search' %}">
-                {% csrf_token %}
-                <input type="text" class="form-control" placeholder="Search" id="query" name="query">
+        <nav class="navbar-nav">
+            <form class="form-inline" role="search" method="get" action="{% url 'shop_search' %}">
+                <input type="search" class="form-control mr-sm-2" placeholder="Search" id="query" name="query">
             </form>
-        </ul>
+        </nav>
         {% if  user.is_authenticated %}
             <ul class="navbar-nav ml-auto">
                 {% url 'profile_cart' pk as profile_cart_url %}
