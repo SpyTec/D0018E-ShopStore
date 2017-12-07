@@ -182,13 +182,22 @@ def checkout_confirm(request):
 
 
 def search_view(request):
-    if request.method == 'POST':
-        search_form = SearchForm(request.POST)
-        if search_form.is_valid():
-            products_set = Product.objects.filter(name__contains=search_form.cleaned_data['query'])
-            return render(request, 'shop/list.html', {
-                'object_list': products_set
-            })
-        else:
-            return None
-    return None
+    # GET method
+    if 'query' in request.GET:
+        products_set = Product.objects.filter(name__contains=request.GET['query'])
+        return render(request, 'shop/list.html', {
+            'object_list': products_set
+        })
+    # POST method
+    # if request.method == 'GET':
+    #     search_form = SearchForm(request.GET)
+    #     if search_form.is_valid():
+    #         print("VALID")
+    #         products_set = Product.objects.filter(name__contains=search_form.cleaned_data['query'])
+    #         return render(request, 'shop/list.html', {
+    #             'object_list': products_set
+    #         })
+    #     else:
+    #         print("NOT valid")
+    #         return None
+    # return None
