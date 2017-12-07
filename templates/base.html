@@ -46,6 +46,12 @@
                 </li>
             {% endif %}
         </ul>
+        <ul class="searchbox">
+            <form class="navbar-form navbar-right" role="search" method="post" action="{% url 'shop_search'%}">
+                {% csrf_token %}
+                <input type="text" class="form-control" placeholder="Search" id="query" name="query">
+            </form>
+        </ul>
         {% if  user.is_authenticated %}
             <ul class="navbar-nav ml-auto">
                 {% url 'profile_cart' pk as profile_cart_url %}

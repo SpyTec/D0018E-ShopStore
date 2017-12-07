@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.views import generic
 
-from shop.forms import CommentForm
+from shop.forms import CommentForm, SearchForm
 from shop.models import Product, Category, CartItem, Cart, Rating, Comment
 from order.models import Order, OrderProduct
 from django.shortcuts import redirect, render
@@ -179,3 +179,16 @@ def checkout_confirm(request):
             return HttpResponseRedirect(reverse('profile_cart'))
 
         return HttpResponseRedirect(reverse('profile_orderdetail', args=(new_order.pk,)))
+
+
+def search_view(request):
+    if request.method == 'POST':
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            products_set = Product.objects.filter(name__contains=search_form.cleaned_data['query'])
+            return render(request, 'shop/list.html', {
+                'object_list': products_set
+            })
+        else:
+            return None
+    return None
