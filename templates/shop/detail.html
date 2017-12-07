@@ -41,24 +41,27 @@
             {% include "shop/out_off_stock.html" %}
         {% endif %}
     </div>
-
-
+    <br>
     {% if user.is_authenticated %}
-    <form method="post" action="{% url 'shop_detail' product.pk %}">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="comment">Comment:</label>
-            <textarea class="form-control" rows="5" id="comment" name="comment"></textarea>
-        </div>
-        <input class="btn btn-primary" type="submit" value="Submit"/>
-    </form>
+    <h3>Write a comment</h3>
+    <div>
+        <form method="post" action="{% url 'shop_detail' product.pk %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="comment">Comment:</label>
+                <textarea class="form-control" rows="5" id="comment" name="comment"></textarea>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Submit"/>
+        </form>
+    </div>
     {% endif %}
-
+    <br>
+    <h3>Comments</h3>
     {% for comment in comments %}
-        <div class="card" style="width: 20rem;">
+        <div class="card" style="width: 100%">
             <div class="card-body">
                 <h4 class="card-title">{{ comment.user.email }}</h4>
-                <h6 class="card-subtitle mb-2 text-muted">2017-12-06 16:00</h6>
+                <h6 class="card-subtitle mb-2 text-muted">{{ comment.time }}</h6>
                 <p class="card-text">{{ comment.comment }}</p>
             </div>
         </div>
