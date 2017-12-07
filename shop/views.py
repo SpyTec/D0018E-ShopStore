@@ -102,7 +102,8 @@ class CategoryView(generic.ListView):
 
     def get_queryset(self):
         pk = int(self.kwargs['pk'])
-        return Product.objects.filter(categories__product=pk).order_by(self.get_ordering())
+        products = Product.objects.filter(categories=pk).order_by(self.get_ordering())
+        return products
 
 
 class CategoryOverview(generic.ListView):
