@@ -3,7 +3,31 @@ from django.urls import reverse, NoReverseMatch
 
 from order.models import Order, OrderProduct
 from profile.models import User
-from .models import Product, Cart, CartItem, Rating
+from .models import Product, Cart, CartItem, Rating, Comment
+
+
+class CommentsTests(TestCase):
+    def setUp(self):
+        self.user = User(
+            email="text@example.com",
+            first_name="John",
+            last_name="Doe",
+            personal_id="20171118-1234",
+            address="Gatan 2",
+            city="Luleå",
+            zip_code="97434",
+            phone_number="0731234567",
+        )
+        self.password = 'Abcde123456'
+        self.user.set_password(self.password)
+        self.user.save()
+
+        self.product = Product.objects.create(name='i7', description="Bla bla bla", price=200, inventory=3)
+        self.comment = Comment.objects.create(comment="Test kommentar.", user=self.user, product=self.product)
+
+    def test_comment_is_visible_to_all_visitors(self):
+        response = self.client.get(reverse('shop_detail', args=(self.product.pk,)))
+        self.assertContains(response, "Test kommentar.")
 
 
 class RatingTests(TestCase):
