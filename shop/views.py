@@ -162,7 +162,7 @@ def checkout(request):
 def checkout_confirm(request):
     if not hasattr(request.user, 'cart'):
         return redirect('/profile/cart/')
-    checkout_transaction(request)
+    return checkout_transaction(request)
 
 
 @transaction.atomic()
@@ -191,7 +191,7 @@ def checkout_transaction(request):
         except IntegrityError:
             messages.warning(request, "Transaction failed, not enough in inventory!")
             return HttpResponseRedirect(reverse('profile_cart'))
-    return HttpResponseRedirect(reverse('profile_orderdetail', args=(new_order.pk,)))
+        return HttpResponseRedirect(reverse('profile_orderdetail', args=(new_order.pk,)))
 
 
 def search_view(request):

@@ -80,18 +80,18 @@ WSGI_APPLICATION = 'shopstore.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'guseri5db',
-    #     'USER': 'guseri-5',
-    #     'PASSWORD': 'bzz76Yg3HpNiXTtj',
-    #     'HOST': 'utbweb.its.ltu.se',
-    #     'PORT': '3306',
-    # }
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, "database.sqlite3"),
+     'default': {
+         'ENGINE': 'django.db.backends.mysql',
+         'NAME': 'guseri5db',
+         'USER': 'guseri-5',
+         'PASSWORD': 'bzz76Yg3HpNiXTtj',
+         'HOST': 'utbweb.its.ltu.se',
+         'PORT': '3306',
     }
+    #'default': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': os.path.join(BASE_DIR, "database.sqlite3"),
+    #}
 }
 
 # Password validation
