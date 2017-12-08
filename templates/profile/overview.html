@@ -31,7 +31,7 @@
                 <tbody>
                     {% for order in user.order_set.all %}
                         <tr>
-                            <th scope="row"><a href="#">{{ order.id }}</a></th>
+                            <th scope="row"><a href="{% url "profile_orderdetail" order.pk %}">{{ order.id }}</a></th>
                             <td>{{ order.ordered }}</td>
                             <td>{{ order.get_order_status_display }}</td>
                         </tr>
