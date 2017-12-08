@@ -197,7 +197,7 @@ def checkout_transaction(request):
 def search_view(request):
     # GET method
     if 'query' in request.GET:
-        products_set = Product.objects.filter(name__contains=request.GET['query'])
+        products_set = Product.objects.filter(name__icontains=request.GET['query'])
         return render(request, 'shop/list.html', {
             'object_list': products_set
         })
