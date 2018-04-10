@@ -6,6 +6,6 @@ Website done as project in D0018E - Database technology course. Primary objectiv
 
 The projects backend was tested with various unit and feature tests to ensure the implementation is correct.
 
-## Strech goals
+## Stretch goals
 
 We had strech goal of implementing VueJS functionality to reduce queries on the back-end and increase UX. As well as adding comments for specific products. Due to lack of time with the project, this was not achieved but foundation around how to achieve it was discussed.
